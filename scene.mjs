@@ -20,10 +20,12 @@ function prop(id,x,y,w,z,extra=''){return`<div class="prop ${extra}" style="left
 // Steel cables from the lamp's own eyelets up and out of frame, plus a faint light cone down to the plants.
 // Eyelet positions are in the 640px lamp sprite; the prop is drawn 150px wide and anchored bottom-centre.
 function lampRig(x,y,z){const k=150/640,L=x-75,T=y-150,eyes=[[65,168],[430,27],[590,183]].map(([px,py])=>[L+px*k,T+py*k]),id='cone'+x;
-return`<svg class="rig" width="1200" height="800" viewBox="0 0 1200 800" style="z-index:${z-2}"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="${y-40}" x2="0" y2="${y+235}"><stop offset="0" stop-color="#fff0cc" stop-opacity=".30"/><stop offset=".6" stop-color="#ffe2a8" stop-opacity=".10"/><stop offset="1" stop-color="#ffe2a8" stop-opacity="0"/></linearGradient></defs>`
+return`<svg class="rig" width="1200" height="800" viewBox="0 0 1200 800" style="z-index:${z-2}"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="${y-40}" x2="0" y2="${y+235}"><stop offset="0" stop-color="#fff0cc" stop-opacity=".20"/><stop offset=".6" stop-color="#ffe2a8" stop-opacity=".07"/><stop offset="1" stop-color="#ffe2a8" stop-opacity="0"/></linearGradient></defs>`
 +`<polygon points="${x-48},${y-40} ${x+48},${y-40} ${x+185},${y+235} ${x-185},${y+235}" fill="url(#${id})" style="mix-blend-mode:screen"/>`
 +eyes.map(([cx,cy])=>`<line x1="${cx+.8}" y1="${cy}" x2="${cx+.8}" y2="-80" stroke="#000" stroke-opacity=".35" stroke-width="1.6"/><line x1="${cx}" y1="${cy}" x2="${cx}" y2="-80" stroke="#8b9096" stroke-width="1.2"/>`).join('')+`</svg>`;}
-export function renderProps(s){let html=prop('coffee',1030,490,95,470)+prop(skin(s,'bench'),750,300,210,290)+prop('poster',270,230,60,200)+prop('sign',660,190,145,170)+prop('fan',1040,600,65,590)+prop(skin(s,'rack'),920,420,180,390);
+// Overhead steel gantry (warped to the room's floor axes) that the lamps hang from; sits behind pots, plants and lamps.
+const RIG=`<img class="rig-img" src="${ART}rig-world.webp" alt="" draggable="false" style="left:97.5px;top:-50.5px;width:867px">`;
+export function renderProps(s){let html=RIG+prop('coffee',1030,490,95,470)+prop(skin(s,'bench'),750,300,210,290)+prop('poster',270,230,60,200)+prop('sign',660,190,145,170)+prop('fan',1040,600,65,590)+prop(skin(s,'rack'),920,420,180,390);
 html+=`<div class="business-name" style="left:660px;top:150px">YOUR GARAGE</div>`;
 if(s.upgrades.expansion||preview==='storage')html+=prop(skin(s,'storage'),980,340,150,330);
 if(s.upgrades.staff)html+=prop('marcus',630,320,72,310,'worker');
