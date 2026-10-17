@@ -21,3 +21,7 @@ Converted but not used yet (staged for the next features): `shelves-pro` (tier-2
 ## Care and maintenance
 
 Growing pots ask for **Water** at 33% growth and **Feed** at 66%; each completed task adds +15% jars at harvest, and neglect only forgoes the bonus (crops never die). Tap the glowing pot label, or use **Tend all** (it becomes **Harvest & tend** when crops are also ready). **Flood tray irrigation** (upgrade, uses `flood-tray` art) waters automatically; **Marcus** feeds automatically. Lamps and filters **wear** with each harvest (half as fast with ventilation); at the limit crops grow 25% slower and lamps render dim until a $120 **service** in the Build tab. Logic lives in `engine.mjs` (`careNeeded`, `tend`, `tendAll`, `service`, `WEAR_LIMIT`).
+
+## Dry and cure
+
+The **Drying line** upgrade ($1,100, `branch` art) lets harvests hang on a line instead of landing as jars: each batch dries for 60s and pays **+20% jars** when collected (`s.dry`, `dryCap` is 4, or 6 with expansion). If the line is full, a harvest goes straight to jars as before. Hanging branches appear on a rope on the left; when a batch is dry the `tray-buds` art appears on the workbench and the left tag reads DRIED. Tap the tag, or use **Harvest & tend / Collect dried**, to collect. Engine: `dryCap`, `dryReady`, `dryNext`, `collectDry`. Known: at the default phone framing the line is just off-screen to the left (pan to see it); the bench tray and the button still work.

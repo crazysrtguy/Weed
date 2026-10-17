@@ -74,3 +74,5 @@ header{height:60px;padding:0 28px}.brand{font-size:24px}.brandmark{font-size:34p
 @keyframes careGlow{0%,100%{box-shadow:0 5px 12px #0005,0 0 0 0 #7cc4ff00}50%{box-shadow:0 5px 12px #0005,0 0 14px 2px #7cc4ff66}}
 .prop.dim img{filter:brightness(.68) saturate(.75)}.lightpool.dim{opacity:.4}
 .maint{grid-column:1/-1}.maint .meter{height:8px;border-radius:5px;background:#ffffff14;overflow:hidden;margin:10px 0 4px}.maint .meter i{display:block;height:100%;background:linear-gradient(90deg,#d95b4a,#e7c05a 40%,#8fd35a)}
+
+.dryb,.drytray{opacity:0;transition:opacity .4s}.dryb.on,.drytray.on{opacity:1}.dryb img{filter:brightness(.8) saturate(.85);transition:filter .4s}.dryb.ready img{filter:brightness(1.05) saturate(1.1) drop-shadow(0 0 7px #c7ef83bb)}.drytray.on img{filter:drop-shadow(0 0 8px #c7ef8388)}
