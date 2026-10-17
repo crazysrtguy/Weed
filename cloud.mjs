@@ -95,3 +95,9 @@ export async function emailLink(addr){const c=await client();await token();
  if(r.error)throw r.error;}
 // Sign in with an email link on a device that has no cloud account yet (new anonymous user is replaced).
 export async function signInEmail(addr){const c=await client();const r=await c.auth.signInWithOtp({email:addr,options:{emailRedirectTo:location.href.split('#')[0]}});if(r.error)throw r.error;}
+
+// ---- devnet purchases (pay by sending; the server creates orders, prices them, and confirms them on chain) ----
+const must=(r)=>{if(r.status>=400&&r.status!==429&&r.status!==410)throw new Error(r.body.message||'Payment service error');return r.body;};
+export const orders=async()=>must(await call({op:'orders'}));
+export const orderCreate=async(item,method)=>must(await call({op:'orderCreate',item,method}));
+export const orderCheck=async(id)=>{const r=await call({op:'orderCheck',id});if(r.status===429)return{slow:true};if(r.status===410)return{expired:true};return must(r);};

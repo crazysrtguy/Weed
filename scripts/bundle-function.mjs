@@ -15,6 +15,7 @@ const strip=src=>src
   .replace(/^export\s+(?=(?:async\s+)?(?:const|let|var|function|class)\b)/gm,'');
 const wrap=(ns,src,names,pre='')=>`const ${ns}=(()=>{${pre}\n${strip(src)}\nreturn {${names.join(',')}};})();\n`;
 
+const chainSrc=read(shared('chain.mjs')),cfgSrc=read(shared('pay-config.mjs')),cNames=await exportsOf('chain.mjs');
 const engine=read(shared('engine.mjs')),league=read(shared('league.mjs')),server=read(shared('server-core.mjs'));
 const eNames=await exportsOf('engine.mjs'),lNames=await exportsOf('league.mjs'),sNames=await exportsOf('server-core.mjs');
 
@@ -33,7 +34,7 @@ const handler=read(new URL('../supabase/functions/hs-api/index.ts',import.meta.u
   .replace(/^\/\/ deno-lint-ignore-file[^\n]*\n/,'').replace(/^import[^\n]*\n/gm,'').replace(/^\/\/ High Stakes API[^\n]*\n/m,'');
 
 let bundle="// @ts-nocheck\nimport {createClient} from 'npm:@supabase/supabase-js@2';\n"
-  +wrap('E',engine,eNames)+wrap('L',league,lNames,'const {STRAINS,STRAIN_IDS}=E;')+wrap('S',server,sNames)+'const {handle}=S;\n'+handler;
+  +wrap('chain',chainSrc,cNames)+wrap('payCfgNs',cfgSrc,['PAY_CONFIG'])+'const {PAY_CONFIG}=payCfgNs;\n'+wrap('E',engine,eNames)+wrap('L',league,lNames,'const {STRAINS,STRAIN_IDS}=E;')+wrap('S',server,sNames)+'const {handle}=S;\n'+handler;
 // Slim: drop full-line comments, blank lines and indentation (code unchanged).
 bundle=bundle.split('\n')
   .filter(l=>!/^\s*\/\/(?!\s*@ts-nocheck)/.test(l)&&l.trim()!=='')

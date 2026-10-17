@@ -58,10 +58,48 @@ const defaultName=(uid)=>'Grower-'+uid.replace(/-/g,'').slice(0,4).toUpperCase()
 /* store: getSave(uid)->{state,version,imported}|null  putSave(uid,state,expectedVersion,imported)->bool
           getWeek(uid,week)->row|null  putWeek(uid,row)  listWeek(week,division,limit)->rows[{uid,points,...}]
           getName(uid)->string|null  setName(uid,name)  */
-export async function handle({store,uid,now,rng=Math.random,body}){
+// ---------- Pay-by-sending orders (devnet). `pay` = {config, newReference(), findPayment(order)} is injected by the host. ----------
+export const ORDER_TTL_MS=24*3600e3,MAX_PENDING=3,CHECK_GAP_MS=4000;
+export function priceRaw(cfg,item,method){
+ const it=cfg.items?.[item];if(!it)return null;
+ const v=method==='sol'?it.sol:method==='token'?it.token:null;if(!(v>0))return null;
+ return method==='sol'?Math.round(v*1e9):Math.round(v*10**cfg.decimals);
+}
+const orderView=(o,cfg)=>({id:o.id,item:o.item,method:o.method,amountRaw:Number(o.amount_raw),decimals:o.method==='sol'?9:cfg.decimals,reference:o.reference,
+ treasury:cfg.treasuryOwner,mint:o.method==='token'?cfg.mint:null,status:o.status,expiresAt:Date.parse(o.expires_at),signature:o.signature??null});
+async function payOps({store,uid,now,body,pay,op}){
+ if(!pay)return{status:503,body:{error:'pay',message:'Payments are not enabled on this server.'}};
+ const cfg=pay.config;
+ if(op==='orders'){return{status:200,body:{orders:(await store.listOrders(uid)).map(o=>orderView(o,cfg)),items:await store.listItems(uid),catalog:cfg.items,decimals:cfg.decimals,treasury:cfg.treasuryOwner,mint:cfg.mint,symbol:cfg.symbol}};}
+ if(op==='orderCreate'){
+  const item=String(body.item||''),method=String(body.method||''),amt=priceRaw(cfg,item,method);
+  if(amt===null)return{status:400,body:{error:'bad',message:'Unknown item or coin.'}};
+  if((await store.listItems(uid)).includes(item))return{status:409,body:{error:'owned',message:'You already own that.'}};
+  const open=(await store.listOrders(uid)).filter(o=>o.status==='pending'&&Date.parse(o.expires_at)>now);
+  const same=open.find(o=>o.item===item&&o.method===method);if(same)return{status:200,body:{order:orderView(same,cfg),reused:true}};
+  if(open.length>=MAX_PENDING)return{status:429,body:{error:'limit',message:'Too many open orders. Pay or wait for one to expire.'}};
+  const o=await store.createOrder({user_id:uid,item,method,amount_raw:amt,reference:pay.newReference(),expires_at:new Date(now+ORDER_TTL_MS).toISOString()});
+  return{status:200,body:{order:orderView(o,cfg)}};
+ }
+ if(op==='orderCheck'){
+  const o=await store.getOrder(uid,String(body.id||''));if(!o)return{status:404,body:{error:'noorder',message:'Order not found.'}};
+  if(o.status==='paid')return{status:200,body:{order:orderView(o,cfg),paid:true,items:await store.listItems(uid)}};
+  if(Date.parse(o.expires_at)<=now)return{status:410,body:{error:'expired',message:'This order expired. Create a new one.'}};
+  if(!await store.claimCheck(o.id,CHECK_GAP_MS))return{status:429,body:{error:'slow',message:'Checking… try again in a few seconds.'}};
+  let r;try{r=await pay.findPayment(o);}catch(e){return{status:200,body:{order:orderView(o,cfg),paid:false,reason:'The network is busy. Try again shortly.'}};}
+  if(!r.ok)return{status:200,body:{order:orderView(o,cfg),paid:false,reason:r.reason==='no payment yet'?'No payment seen yet.':r.reason}};
+  const done=await store.settle(o.id,r.signature,r.payer);
+  const fresh=await store.getOrder(uid,o.id);
+  return{status:200,body:{order:orderView(fresh,cfg),paid:fresh.status==='paid',settledNow:done,items:await store.listItems(uid),reason:fresh.status==='paid'?'':'That payment was already used for another order.'}};
+ }
+ return null;
+}
+
+export async function handle({store,uid,now,rng=Math.random,body,pay}){
  const op=body?.op,week=L.weekId(now),info={now,week,weekEnd:L.weekEnd(week)};
  const nameOf=async(u)=>(await store.getName(u))||defaultName(u);
- if(op==='load'){const s=await store.getSave(uid);return{status:200,body:{...info,state:s?.state??null,name:await nameOf(uid),score:await store.getWeek(uid,week)}};}
+ if(op==='orders'||op==='orderCreate'||op==='orderCheck')return payOps({store,uid,now,body,pay,op});
+ if(op==='load'){const s=await store.getSave(uid);return{status:200,body:{...info,state:s?.state??null,name:await nameOf(uid),score:await store.getWeek(uid,week),items:store.listItems?await store.listItems(uid):[]}};}
  if(op==='import'){
   const cur=await store.getSave(uid),inc=E.normalize(body.state,now);
   if(cur&&!body.replace)return{status:409,body:{error:'exists',message:'A cloud save already exists.',cloudRank:L.saveRank(cur.state),incomingRank:L.saveRank(inc)}};

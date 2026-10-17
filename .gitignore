@@ -10,3 +10,4 @@ node_modules/
 devnet/.keys/
 devnet/node_modules/
 devnet/.orders.json
+devnet/.payouts.json
