@@ -25,3 +25,7 @@ Growing pots ask for **Water** at 33% growth and **Feed** at 66%; each completed
 ## Dry and cure
 
 The **Drying line** upgrade ($1,100, `branch` art) lets harvests hang on a line instead of landing as jars: each batch dries for 60s and pays **+20% jars** when collected (`s.dry`, `dryCap` is 4, or 6 with expansion). If the line is full, a harvest goes straight to jars as before. Hanging branches appear on a rope on the left; when a batch is dry the `tray-buds` art appears on the workbench and the left tag reads DRIED. Tap the tag, or use **Harvest & tend / Collect dried**, to collect. Engine: `dryCap`, `dryReady`, `dryNext`, `collectDry`. The default framing widens to include the line once the upgrade is owned.
+
+## Profile cosmetics (badges, avatars, decor)
+
+`profile.mjs` owns these and keeps them **outside the game save**, so cloud sync cannot overwrite them: the avatar is a per-device preference (`localStorage` key `hs-profile-v1`), and milestones and room decor are derived from progress (lifetime sales, harvests, upgrades). Milestones use the medallion art (`badge-*`), decor unlocks by lifetime sales (chair $1,500, neon plate $3,000, display cabinet $6,000, gold leaf trophy $10,000) and is drawn by `scene.mjs`. `game.mjs` only calls `profilePanel(html,state)` and `startProfile(getState,toast)`. A "new decor" toast fires once per item.

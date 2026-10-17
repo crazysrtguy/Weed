@@ -1,7 +1,8 @@
 import{prog,stg,left,STRAINS,STRAIN_IDS,careNeeded,CARE,WEAR_LIMIT,dryCap,dryReady,dryNext}from'./engine.mjs';
+import{DECOR}from'./profile.mjs';
 export const ART='assets/v2/';
 const cache=new Map();
-const ids=['pot','starter','young','developed','ready','rack','lamp','bench','storage','fan','marcus','couch','coffee','sign','poster','gold-rack','gold-lamp','gold-bench','gold-storage','lamp-pro','bench-pro','vent','flood-tray','branch','tray-buds',...STRAIN_IDS.filter(id=>STRAINS[id].art).flatMap(id=>['starter','young','developed','ready'].map(st=>id+'-'+st))];
+const ids=['pot','starter','young','developed','ready','rack','lamp','bench','storage','fan','marcus','couch','coffee','sign','poster','gold-rack','gold-lamp','gold-bench','gold-storage','lamp-pro','bench-pro','vent','flood-tray','branch','tray-buds',...DECOR.map(d=>d.art),...STRAIN_IDS.filter(id=>STRAINS[id].art).flatMap(id=>['starter','young','developed','ready'].map(st=>id+'-'+st))];
 // Runtime sprite preparation suppresses low-opacity generation haze. Source masters stay untouched.
 async function prepare(id){const img=new Image();img.src=ART+id+'.webp';await img.decode();const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);const im=ctx.getImageData(0,0,c.width,c.height),d=im.data;let x0=c.width,y0=c.height,x1=0,y1=0;const cutoff=/(^|-)(pot|starter|young|developed|ready|marcus)$/.test(id)?160:70;
 for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++){const i=(y*c.width+x)*4,a=d[i+3];if(a<cutoff)d[i+3]=0;else{d[i+3]=Math.min(255,Math.round((a-cutoff)/(255-cutoff)*255));if(d[i+3]>20){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);}}}
@@ -41,6 +42,7 @@ if(s.upgrades.equipment||preview==='rack'||s.equipped.includes('rack'))html+=pro
 if(s.upgrades.expansion||preview==='storage')html+=prop(skin(s,'storage'),980,340,150,330);
 if(s.upgrades.irrigation)s.slots.forEach((t,i)=>{const[x,y]=XY[i];html+=prop('flood-tray',x,y+30,160,y-1);});
 html+=dryLine(s);
+for(const d of DECOR)if((s.sold||0)>=d.at)html+=prop(d.art,d.x,d.y,d.w,d.z??d.y);  // decor unlocks with lifetime sales (cosmetic, not part of the save)
 if(s.upgrades.ventilation)html+=prop('vent',1125,262,125,280);
 if(s.upgrades.staff)html+=prop('marcus',630,320,72,310,'worker');
 // Lamps hang 70px higher than the pools/plants beneath them so tall ready plants clear the fixture.
