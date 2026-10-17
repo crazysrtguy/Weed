@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as E from '../engine.mjs';
+const now=1000000;
+test('harvest cannot be claimed twice',()=>{const s=E.fresh(now);assert.equal(E.harvest(s,0,now).ok,true);assert.equal(s.jars,12);assert.equal(E.harvest(s,0,now).ok,false);assert.equal(s.jars,12);});
+test('growth honors elapsed time and rejects future harvest',()=>{const s=E.fresh(now);s.slots[0]=now;assert.equal(E.harvest(s,0,now+89999).ok,false);assert.equal(E.harvest(s,0,now+90000).ok,true);assert.equal(E.progress(now,now-100),0);});
+test('orders spend stock once and reject insufficient stock',()=>{const s=E.fresh(now);assert.equal(E.sell(s,'tony').ok,false);s.jars=8;E.sell(s,'tony');assert.equal(s.cash,1140);assert.equal(s.jars,0);assert.equal(E.sell(s,'tony').ok,false);});
+test('upgrades require cash and cannot be purchased twice',()=>{const s=E.fresh(now);assert.equal(E.buyUpgrade(s,'expansion').ok,false);s.cash=600;assert.equal(E.buyUpgrade(s,'expansion').ok,true);assert.equal(s.slots.length,8);assert.equal(E.buyUpgrade(s,'expansion').ok,false);assert.equal(s.cash,0);});
+test('equipment and Marcus apply on harvest',()=>{const s=E.fresh(now);s.upgrades.equipment=s.upgrades.staff=true;E.harvest(s,0,now);assert.equal(s.jars,15);assert.equal(s.slots[0],now);assert.equal(E.harvest(s,0,now).ok,false);});
+test('cosmetics only spend test credits and require ownership',()=>{const s=E.fresh(now);assert.equal(E.equip(s,'rack').ok,false);E.buySkin(s,'rack');assert.equal(s.cash,500);assert.equal(s.testCredits,850);assert.deepEqual(s.equipped,['rack']);assert.equal(E.buySkin(s,'rack').ok,false);E.equip(s,'rack');assert.deepEqual(s.equipped,[]);});
+test('save migration preserves economy and filters invalid ownership',()=>{const s=E.normalize({cash:220,jars:10,expansion:true,slots:[now-100000]},now);assert.equal(s.cash,220);assert.equal(s.slots.length,8);assert.equal(E.readyCount(s,now),1);const r=E.normalize({...s,owned:['rack','fake'],equipped:['rack','lamp']},now);assert.deepEqual(r.owned,['rack']);assert.deepEqual(r.equipped,['rack']);assert.deepEqual(E.normalize(JSON.parse(JSON.stringify(r)),now),r);});
+test('recovery prevents empty operation soft lock without repeat grants',()=>{const s=E.fresh(now);s.cash=0;s.slots.fill(null);assert.equal(E.rescue(s).ok,true);assert.equal(E.rescue(s).ok,false);assert.equal(E.plant(s,0,now).ok,true);assert.equal(s.cash,0);assert.equal(E.rescue(s).ok,false);});

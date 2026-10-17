@@ -1,0 +1,234 @@
+[
+  {
+    "id": "room",
+    "source": "env-garage-base-v001.png",
+    "runtime": "room.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 352728
+  },
+  {
+    "id": "pot",
+    "source": "pot-fabric-soil-filled-v002.png",
+    "runtime": "pot.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 24386
+  },
+  {
+    "id": "starter",
+    "source": "plant-garage-og-starter-v002.png",
+    "runtime": "starter.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 13292
+  },
+  {
+    "id": "young",
+    "source": "plant-garage-og-young-v002.png",
+    "runtime": "young.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 77298
+  },
+  {
+    "id": "developed",
+    "source": "plant-garage-og-developed-v001.png",
+    "runtime": "developed.webp",
+    "width": 491,
+    "height": 640,
+    "bytes": 149862
+  },
+  {
+    "id": "ready",
+    "source": "plant-garage-og-ready-v001.png",
+    "runtime": "ready.webp",
+    "width": 455,
+    "height": 640,
+    "bytes": 130502
+  },
+  {
+    "id": "rack",
+    "source": "eq-rack-t1-v001.png",
+    "runtime": "rack.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 76564
+  },
+  {
+    "id": "lamp",
+    "source": "eq-lamp-t1-v001.png",
+    "runtime": "lamp.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 59206
+  },
+  {
+    "id": "bench",
+    "source": "eq-bench-t1-v001.png",
+    "runtime": "bench.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 101398
+  },
+  {
+    "id": "storage",
+    "source": "eq-storage-t1-v001.png",
+    "runtime": "storage.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 77730
+  },
+  {
+    "id": "fan",
+    "source": "eq-fan-t1-v001.png",
+    "runtime": "fan.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 107382
+  },
+  {
+    "id": "seed",
+    "source": "prod-seed-packet-v001.png",
+    "runtime": "seed.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 53764
+  },
+  {
+    "id": "clone",
+    "source": "prod-clone-tray-v001.png",
+    "runtime": "clone.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 112898
+  },
+  {
+    "id": "jar",
+    "source": "prod-jar-standard-v001.png",
+    "runtime": "jar.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 61396
+  },
+  {
+    "id": "premium-jar",
+    "source": "prod-jar-premium-v001.png",
+    "runtime": "premium-jar.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 86190
+  },
+  {
+    "id": "parcel",
+    "source": "prod-shipping-parcel-v001.png",
+    "runtime": "parcel.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 51122
+  },
+  {
+    "id": "marcus",
+    "source": "char-marcus-body-v001.png",
+    "runtime": "marcus.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 40798
+  },
+  {
+    "id": "marcus-portrait",
+    "source": "char-marcus-portrait-neutral-v001.png",
+    "runtime": "marcus-portrait.webp",
+    "width": 320,
+    "height": 320,
+    "bytes": 25820
+  },
+  {
+    "id": "tony",
+    "source": "buyer-tony-neutral-v001.png",
+    "runtime": "tony.webp",
+    "width": 320,
+    "height": 320,
+    "bytes": 22068
+  },
+  {
+    "id": "bryce",
+    "source": "buyer-bryce-neutral-v001.png",
+    "runtime": "bryce.webp",
+    "width": 320,
+    "height": 320,
+    "bytes": 22144
+  },
+  {
+    "id": "rick",
+    "source": "buyer-rick-neutral-v001.png",
+    "runtime": "rick.webp",
+    "width": 320,
+    "height": 320,
+    "bytes": 36784
+  },
+  {
+    "id": "couch",
+    "source": "decor-couch-starter-v001.png",
+    "runtime": "couch.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 65630
+  },
+  {
+    "id": "coffee",
+    "source": "decor-coffee-station-v001.png",
+    "runtime": "coffee.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 70218
+  },
+  {
+    "id": "sign",
+    "source": "decor-business-sign-v001.png",
+    "runtime": "sign.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 46590
+  },
+  {
+    "id": "poster",
+    "source": "decor-poster-frame-v001.png",
+    "runtime": "poster.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 54186
+  },
+  {
+    "id": "gold-rack",
+    "source": "skin-black-gold-rack-v001.png",
+    "runtime": "gold-rack.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 70492
+  },
+  {
+    "id": "gold-lamp",
+    "source": "skin-black-gold-lamp-v001.png",
+    "runtime": "gold-lamp.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 56908
+  },
+  {
+    "id": "gold-bench",
+    "source": "skin-black-gold-bench-v001.png",
+    "runtime": "gold-bench.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 66474
+  },
+  {
+    "id": "gold-storage",
+    "source": "skin-black-gold-storage-v001.png",
+    "runtime": "gold-storage.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 69004
+  }
+]
