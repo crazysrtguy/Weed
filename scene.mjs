@@ -17,11 +17,18 @@ let preview=null;
 export function setPreview(id){preview=id;}
 function skin(s,id){return preview===id||s.equipped.includes(id)?'gold-'+id:id;}
 function prop(id,x,y,w,z,extra=''){return`<div class="prop ${extra}" style="left:${x}px;top:${y}px;width:${w}px;z-index:${z}"><img src="${sprite(id)}" alt="" draggable="false"></div>`}
-export function renderProps(s){let html=prop('couch',170,480,210,450)+prop('coffee',1030,490,95,470)+prop(skin(s,'bench'),750,300,210,290)+prop('poster',270,230,60,200)+prop('sign',660,190,145,170)+prop('fan',1040,600,65,590)+prop(skin(s,'rack'),920,420,180,390);
+// Steel cables from the lamp's own eyelets up and out of frame, plus a faint light cone down to the plants.
+// Eyelet positions are in the 640px lamp sprite; the prop is drawn 150px wide and anchored bottom-centre.
+function lampRig(x,y,z){const k=150/640,L=x-75,T=y-150,eyes=[[65,168],[430,27],[590,183]].map(([px,py])=>[L+px*k,T+py*k]),id='cone'+x;
+return`<svg class="rig" width="1200" height="800" viewBox="0 0 1200 800" style="z-index:${z-2}"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="${y-40}" x2="0" y2="${y+235}"><stop offset="0" stop-color="#fff0cc" stop-opacity=".30"/><stop offset=".6" stop-color="#ffe2a8" stop-opacity=".10"/><stop offset="1" stop-color="#ffe2a8" stop-opacity="0"/></linearGradient></defs>`
++`<polygon points="${x-48},${y-40} ${x+48},${y-40} ${x+185},${y+235} ${x-185},${y+235}" fill="url(#${id})" style="mix-blend-mode:screen"/>`
++eyes.map(([cx,cy])=>`<line x1="${cx+.8}" y1="${cy}" x2="${cx+.8}" y2="-80" stroke="#000" stroke-opacity=".35" stroke-width="1.6"/><line x1="${cx}" y1="${cy}" x2="${cx}" y2="-80" stroke="#8b9096" stroke-width="1.2"/>`).join('')+`</svg>`;}
+export function renderProps(s){let html=prop('coffee',1030,490,95,470)+prop(skin(s,'bench'),750,300,210,290)+prop('poster',270,230,60,200)+prop('sign',660,190,145,170)+prop('fan',1040,600,65,590)+prop(skin(s,'rack'),920,420,180,390);
 html+=`<div class="business-name" style="left:660px;top:150px">YOUR GARAGE</div>`;
 if(s.upgrades.expansion||preview==='storage')html+=prop(skin(s,'storage'),980,340,150,330);
 if(s.upgrades.staff)html+=prop('marcus',630,320,72,310,'worker');
-[[470,275],[640,315],[810,355]].forEach(([x,y])=>{html+=prop(skin(s,'lamp'),x,y,150,Math.round(y))+`<div class="lightpool" style="left:${x}px;top:${y+110}px;z-index:${y-1}"></div>`});document.querySelector('#props').innerHTML=html;}
+// Lamps hang 70px higher than the pools/plants beneath them so tall ready plants clear the fixture.
+[[470,275],[640,315],[810,355]].forEach(([x,yo])=>{const y=yo-70;html+=lampRig(x,y,yo)+prop(skin(s,'lamp'),x,y,150,yo)+`<div class="lightpool" style="left:${x}px;top:${yo+110}px;z-index:${yo-1}"></div>`});document.querySelector('#props').innerHTML=html;}
 export function renderSlots(s,inspect,now=Date.now()){
 const root=document.querySelector('#slots');root.innerHTML=s.slots.map((t,i)=>{const[x,y]=XY[i];return`<button class="plant-slot" data-slot="${i}" style="left:${x}px;top:${y}px;z-index:${y}" aria-label="Inspect pot ${i+1}"><span class="ground-shadow"></span><img class="pot" src="${sprite('pot')}" alt=""><span class="foliage"></span></button>`}).join('')+s.slots.map((t,i)=>{const[x,y]=XY[i];return`<button class="slot-tag" data-tag="${i}" style="left:${x}px;top:${y+9}px" aria-hidden="true" tabindex="-1"></button>`}).join('');root.querySelectorAll('button').forEach(b=>b.onclick=()=>inspect(Number(b.dataset.slot??b.dataset.tag)));updateSlots(s,now);
 }

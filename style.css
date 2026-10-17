@@ -63,3 +63,5 @@ header{height:60px;padding:0 28px}.brand{font-size:24px}.brandmark{font-size:34p
 #coach b{flex:1 1 100%}
 #coach .coach-n{order:-1}
 }
+
+.rig{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
