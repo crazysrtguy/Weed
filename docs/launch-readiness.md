@@ -12,13 +12,15 @@ Honest status before any real token. "Solid" means every item below is either ve
 | Live backend (real Supabase) | `node scripts/live-test.mjs`: 20 checks incl. forged token, billion-cash import, impossible stock, made-up actions, server clock |
 | Live purchases (real Supabase + real devnet) | `node devnet/live-pay.mjs`: 12 checks. Server-set price (client amount ignored), unpaid stays pending, **underpayment rejected**, correct SOL settles only after finalization, re-check idempotent, cannot rebuy, token payment settles, **SOL paid for a token order rejected**, **one transaction listing two orders' references settles only one**, other players cannot touch your order |
 | Payouts (devnet) | `devnet/payout.mjs`: bad address, over-cap, missing id, duplicate id all refused; real SOL + token payout sent; **re-running the same file pays nothing twice** (ledger) |
+| Weekly tournament, full cycle (devnet) | `node devnet/live-tournament.mjs` + SQL `hs_week_winners` + `payout.mjs`: players score by server-timed orders; wallets link BY SENDING 0.001 SOL; **a player with imported progress is excluded**, **a player with no wallet is excluded**, **a second account cannot claim an already-linked wallet**; winners export returned exactly the 2 eligible players with correct prizes; export **refuses an unfinished week**; payout refused when the prize pool was underfunded, then paid 500 + 250 HSTEST after funding; **re-run paid nothing twice**; balances verified on chain |
 | In-game flow on a phone-size viewport | Cloud save on, Profile shows the shop, order created, paid from a simulated wallet, the page flipped to "Owned" by itself |
 
 ## Found and fixed in this pass
 
 1. `devnet/payout.mjs` would pay everyone again if re-run. Now every entry needs a unique `id` and paid ids are written to `.payouts.json`.
 2. Earlier: expansion upgrade corrupted pot arrays for every upgrade (fixed, tested).
-3. Purchases were only a demo page. They are now real server ops (`orders`, `orderCreate`, `orderCheck`) with tables, one-transaction settlement and per-order throttling (migration `0002_orders.sql`).
+3. A hand-built "empty" cloud save could smuggle in free pots/jars/cash; the server now replaces any no-progress import with a clean start.
+4. Purchases were only a demo page. They are now real server ops (`orders`, `orderCreate`, `orderCheck`) with tables, one-transaction settlement and per-order throttling (migration `0002_orders.sql`).
 
 ## Known glitch (minor, not fixed)
 
@@ -26,8 +28,9 @@ Honest status before any real token. "Solid" means every item below is either ve
 
 ## NOT built yet (blockers for a token launch)
 
-- **Tournaments and prizes.** The league is points only. There is no entry fee, prize pool, winner export or automated payout. Payouts are a manual script run with the treasury key.
-- **League fairness for prizes.** A player can import a local save with inflated (but "plausible") stock and reach the 500-point weekly cap quickly. Before any prize: make prize-eligible players earn on server-started saves only (`imported=false`), or add per-day order limits. Also needs CAPTCHA, because anonymous accounts are free to create.
+- **Prizes are devnet-only and semi-manual.** Built: eligibility (server-started save + wallet linked by sending, one wallet per account), weekly winners export (`hs_week_winners`, top 3 per division, 500/250/100 HSTEST x1/x2/x4), payout script with caps and a no-double-pay ledger. Not built: automatic weekly run, entry fees, a funded prize-pool policy (the script refuses if the treasury is short), tie/dispute handling, anti-sybil beyond one-wallet-per-account (a person can still run several accounts with several wallets: needs CAPTCHA/phone/identity decisions and legal review).
+- **Existing local players are not prize-eligible** if they enable cloud after playing (their save counts as imported). They can still use the league; prize players must start on the cloud. The UI says so.
+- **Wallet cannot be changed** once linked (support process needed).
 - **What the token does in the game.** Today HSTEST only buys 4 cosmetic items. The economy plan (sinks, prize split, supply) is not approved.
 - **Treasury custody.** One key on a dev machine. Mainnet needs a multisig (for example Squads), a small separate payout wallet, and a decision on the mint authority.
 - **Mistaken payments** (sent without the reference, wrong amount, expired order). No reconciliation or refund tool yet.

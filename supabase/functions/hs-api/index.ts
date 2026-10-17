@@ -18,6 +18,7 @@ const store={
   return(data||[]).map((r:any)=>({uid:r.user_id,points:r.points,orders:r.orders,premiumJars:r.premium_jars}));},
  async getName(uid:string){const{data}=await db.from('hs_profiles').select('display_name').eq('user_id',uid).maybeSingle();return data?.display_name??null;},
  async setName(uid:string,name:string){const{error}=await db.from('hs_profiles').upsert({user_id:uid,display_name:name});if(error)throw error;},
+ async getWallet(uid:string){const{data}=await db.from('hs_wallets').select('wallet').eq('user_id',uid).maybeSingle();return data?.wallet??null;},
  // ---- pay-by-sending orders ----
  async listOrders(uid:string){const{data,error}=await db.from('hs_orders').select('*').eq('user_id',uid).order('created_at',{ascending:false}).limit(20);if(error)throw error;return data||[];},
  async listItems(uid:string){const{data,error}=await db.from('hs_items').select('item').eq('user_id',uid);if(error)throw error;return(data||[]).map((r:any)=>r.item);},

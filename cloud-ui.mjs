@@ -56,8 +56,9 @@ export async function bindLeague(ctx,division){
  const j=document.querySelector('#leagueJoin');if(j)j.onclick=async()=>{j.disabled=true;try{handleConnect(ctx,await C.turnOn());}catch(e){ctx.toast(e.message);}j.disabled=false;};
  const box=document.querySelector('#boardBox');if(!box)return;
  try{const d=await C.league(division);if(!document.body.contains(box))return;
-  const mine=d.mine,rank=d.rows.findIndex(r=>r.me)+1;
-  box.innerHTML=`<span class="tag">${esc(divName(d.division))} division · resets in ${left(d.weekEnd)}</span><h3>${mine?mine.points:0} pts${rank?` · #${rank}`:''}</h3><p>${mine?`${mine.orders} orders · ${mine.premiumJars} premium jars this week.`:'Complete an order to join this week’s board.'}</p>
+  const mine=d.mine,rank=d.rows.findIndex(r=>r.me)+1,pz=d.prize||{eligible:false,reasons:[]};
+  const prizeLine=pz.eligible?`Prize-eligible ✓ · payout wallet ${esc(pz.wallet)}`:`Not prize-eligible yet: ${pz.reasons.includes('imported')?'this save was imported with progress (prize players start fresh on the cloud). ':''}${pz.reasons.includes('no-wallet')?'link a payout wallet in Profile (send a tiny SOL amount; nothing is connected).':''}`;
+  box.innerHTML=`<span class="tag">${esc(divName(d.division))} division · resets in ${left(d.weekEnd)}</span><h3>${mine?mine.points:0} pts${rank?` · #${rank}`:''}</h3><p>${mine?`${mine.orders} orders · ${mine.premiumJars} premium jars this week.`:'Complete an order to join this week’s board.'}</p><p class="dialog-notice">${prizeLine}<br>Weekly test prizes (devnet HSTEST, top 3 per division): ${L.PRIZES.map((p,i)=>`#${i+1} ${p}`).join(' · ')} × ${L.PRIZE_MULT[d.division]||1}. No real money.</p>
   <div class="chips">${d.divisions.map(x=>`<button class="chip ${x===d.division?'on':''}" data-div="${x}">${esc(divName(x))}</button>`).join('')}</div>
   ${d.rows.length?`<ol class="board">${d.rows.map((r,i)=>`<li class="${r.me?'me':''}"><span class="rk">${i+1}</span><span class="nm">${esc(r.name)}${r.me?' (you)':''}</span><b>${r.points}</b>${r.me?'':`<button class="secondary" data-visit="${esc(r.uid)}">Visit</button>`}</li>`).join('')}</ol>`:'<p>Nobody has scored in this division yet. Be first.</p>'}`;
   box.querySelectorAll('[data-div]').forEach(b=>b.onclick=()=>bindLeague(ctx,b.dataset.div));

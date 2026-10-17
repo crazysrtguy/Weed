@@ -48,6 +48,13 @@ export function plausible(s){
  return null;
 }
 
+/** Prize eligibility: a server-started save (never imported with progress) AND a payout wallet linked by sending. */
+export function prizeStatus(save,wallet){
+ const reasons=[];if(!save||save.imported)reasons.push('imported');if(!wallet)reasons.push('no-wallet');
+ return{eligible:reasons.length===0,reasons,wallet:wallet?wallet.slice(0,4)+'…'+wallet.slice(-4):null};
+}
+const prizeOf=async(store,uid)=>prizeStatus(await store.getSave(uid),store.getWallet?await store.getWallet(uid):null);
+
 export const publicRoom=(s,name,week,now)=>({name,division:week?.division,points:week?.points||0,
  pots:s.slots.map((t,i)=>t===null?null:{strain:s.kinds[i],stage:E.stg(s,i,now)}),
  upgrades:E.UPGRADES.filter(u=>s.upgrades[u.id]).map(u=>u.id),equipped:s.equipped,sold:s.sold});
@@ -90,7 +97,7 @@ async function payOps({store,uid,now,body,pay,op}){
   if(!r.ok)return{status:200,body:{order:orderView(o,cfg),paid:false,reason:r.reason==='no payment yet'?'No payment seen yet.':r.reason}};
   const done=await store.settle(o.id,r.signature,r.payer);
   const fresh=await store.getOrder(uid,o.id);
-  return{status:200,body:{order:orderView(fresh,cfg),paid:fresh.status==='paid',settledNow:done,items:await store.listItems(uid),reason:fresh.status==='paid'?'':'That payment was already used for another order.'}};
+  return{status:200,body:{order:orderView(fresh,cfg),paid:fresh.status==='paid',settledNow:done,items:await store.listItems(uid),reason:fresh.status==='paid'?'':'That payment could not be applied (already used, or that wallet is linked to another account).'}};
  }
  return null;
 }
@@ -99,14 +106,17 @@ export async function handle({store,uid,now,rng=Math.random,body,pay}){
  const op=body?.op,week=L.weekId(now),info={now,week,weekEnd:L.weekEnd(week)};
  const nameOf=async(u)=>(await store.getName(u))||defaultName(u);
  if(op==='orders'||op==='orderCreate'||op==='orderCheck')return payOps({store,uid,now,body,pay,op});
- if(op==='load'){const s=await store.getSave(uid);return{status:200,body:{...info,state:s?.state??null,name:await nameOf(uid),score:await store.getWeek(uid,week),items:store.listItems?await store.listItems(uid):[]}};}
+ if(op==='load'){const s=await store.getSave(uid);return{status:200,body:{...info,state:s?.state??null,name:await nameOf(uid),score:await store.getWeek(uid,week),items:store.listItems?await store.listItems(uid):[],prize:await prizeOf(store,uid)}};}
  if(op==='import'){
-  const cur=await store.getSave(uid),inc=E.normalize(body.state,now);
+  const cur=await store.getSave(uid),raw=E.normalize(body.state,now);
+  // A save with no progress is replaced by a clean server-made start, so a hand-built "empty" save cannot smuggle in free resources.
+  // Only a clean start stays prize-eligible; importing real progress is allowed but never eligible.
+  const progress=raw.harvests>0||raw.sold>0,inc=progress?raw:{...E.fresh(now),owned:raw.owned,equipped:raw.equipped,sound:raw.sound};
   if(cur&&!body.replace)return{status:409,body:{error:'exists',message:'A cloud save already exists.',cloudRank:L.saveRank(cur.state),incomingRank:L.saveRank(inc)}};
   if(cur&&body.replace&&L.saveRank(cur.state)>L.saveRank(inc)&&!body.confirmWorse)return{status:409,body:{error:'worse',message:'The cloud save is further along.',cloudRank:L.saveRank(cur.state),incomingRank:L.saveRank(inc)}};
-  const why=plausible(inc);if(why)return{status:422,body:{error:'implausible',message:why}};
+  const why=plausible(raw);if(why)return{status:422,body:{error:'implausible',message:why}};
   inc.lastSeen=now;
-  if(!await store.putSave(uid,inc,cur?.version??0,true))return{status:409,body:{error:'conflict',message:'Save changed elsewhere. Try again.'}};
+  if(!await store.putSave(uid,inc,cur?.version??0,progress))return{status:409,body:{error:'conflict',message:'Save changed elsewhere. Try again.'}};
   return{status:200,body:{...info,state:inc}};
  }
  if(op==='act'){
@@ -123,7 +133,7 @@ export async function handle({store,uid,now,rng=Math.random,body,pay}){
   const division=body.division||mine?.division||L.divisionFor(s?.sold||0);
   const rows=await store.listWeek(week,division,50);
   const out=[];for(const r of rows)out.push({uid:r.uid,name:await nameOf(r.uid),points:r.points,orders:r.orders,premiumJars:r.premiumJars,me:r.uid===uid});
-  return{status:200,body:{...info,division,divisions:L.DIVISIONS.map(d=>d.id),rows:out,mine}};
+  return{status:200,body:{...info,division,divisions:L.DIVISIONS.map(d=>d.id),rows:out,mine,prize:await prizeOf(store,uid)}};
  }
  if(op==='room'){
   const target=String(body.user||''),w=await store.getWeek(target,week),t=w&&await store.getSave(target);

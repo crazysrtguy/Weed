@@ -77,7 +77,7 @@ test('one transaction cannot pay two orders (signature is unique)',async()=>{
  assert.equal((await call(st,pay,'u1',{op:'orderCheck',id:a.id})).body.paid,true);
  noWait(st);
  const r=await call(st,pay,'u1',{op:'orderCheck',id:b.id});
- assert.equal(r.body.paid,false);assert.match(r.body.reason,/already used/);assert.deepEqual(await st.listItems('u1'),['rack']);
+ assert.equal(r.body.paid,false);assert.match(r.body.reason,/already used|linked to another/);assert.deepEqual(await st.listItems('u1'),['rack']);
 });
 
 test("nobody can check, settle or see another player's order",async()=>{

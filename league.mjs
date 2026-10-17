@@ -31,4 +31,7 @@ export function scoreOrder(w,offerId,taken){
 }
 
 // Which save is "better"? Lifetime sales, then harvests. Used to avoid silently overwriting progress.
+// Weekly prizes in the test token, per division and rank. The authoritative copy lives in SQL (hs_week_winners); a live test checks they match.
+export const PRIZES=[500,250,100],PRIZE_MULT={garage:1,warehouse:2,empire:4};
+export const prizeFor=(division,rank)=>PRIZES[rank-1]?PRIZES[rank-1]*(PRIZE_MULT[division]||1):0;
 export const saveRank=(s)=>(s?.sold||0)*1000+(s?.harvests||0);

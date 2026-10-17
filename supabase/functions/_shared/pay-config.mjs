@@ -21,6 +21,9 @@ export const PAY_CONFIG={
   "storage": {
    "token": 150,
    "sol": 0.05
+  },
+  "link": {
+   "sol": 0.001
   }
  }
 };

@@ -4,7 +4,7 @@ import * as C from './cloud.mjs';
 import {solanaPayUrl,formatAmount} from './chain.mjs';
 
 const esc=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const NAMES={rack:'Display rack',lamp:'Neon grow lamp',bench:'Trim bench',storage:'Storage crate'};
+const NAMES={rack:'Display rack',lamp:'Neon grow lamp',bench:'Trim bench',storage:'Storage crate',link:'Payout wallet link'};
 const nameOf=(id)=>NAMES[id]||id;
 let data=null,active=null,timer=null;
 
@@ -24,9 +24,9 @@ const orderBox=(o)=>{
 function view(){
  const box=document.querySelector('#payBox');if(!box)return;
  const owned=new Set(data.items),cat=data.catalog;
- box.innerHTML=`<span class="tag">Premium shop · DEVNET TEST · no real money</span><h3>Premium decor</h3><p>Paid with free devnet SOL or ${esc(data.symbol)}. Cosmetic only: it never changes growth speed, quality or yield.</p>`
+ box.innerHTML=`<span class="tag">Premium shop · DEVNET TEST · no real money</span><h3>Premium shop</h3><p>Paid with free devnet SOL or ${esc(data.symbol)}. Cosmetic only: it never changes growth speed, quality or yield.</p><p class="dialog-notice">Payout wallet link: send ${cat.link?.sol||'a tiny amount of'} SOL from the wallet that should receive league prizes. Sending proves you control it; nothing is connected. One wallet per account.</p>`
   +Object.keys(cat).map(id=>owned.has(id)?`<div class="stat"><span>${esc(nameOf(id))}</span><b>Owned ✓</b></div>`:
-   `<div class="stat"><span>${esc(nameOf(id))}</span><span><button class="secondary" data-buy="${esc(id)}|sol">${cat[id].sol} SOL</button> <button class="secondary" data-buy="${esc(id)}|token">${cat[id].token} ${esc(data.symbol)}</button></span></div>`).join('')
+   `<div class="stat"><span>${esc(nameOf(id))}</span><span>${cat[id].sol?`<button class="secondary" data-buy="${esc(id)}|sol">${cat[id].sol} SOL</button>`:''} ${cat[id].token?`<button class="secondary" data-buy="${esc(id)}|token">${cat[id].token} ${esc(data.symbol)}</button>`:''}</span></div>`).join('')
   +`<div id="payOrder">${active?orderBox(active):''}</div>`;
  box.querySelectorAll('[data-buy]').forEach(b=>b.onclick=async()=>{const[item,method]=b.dataset.buy.split('|');b.disabled=true;try{active=(await C.orderCreate(item,method)).order;view();poll(true);}catch(e){note(e.message);}b.disabled=false;});
  box.querySelectorAll('[data-copy]').forEach(c=>c.onclick=()=>{try{navigator.clipboard.writeText(c.dataset.copy);note('Copied.');}catch{}});
