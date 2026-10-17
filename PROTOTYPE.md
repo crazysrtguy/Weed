@@ -11,3 +11,9 @@ Art uses existing generated masters, resized as WebP runtime assets. Canvas supp
 ## Strains
 
 `STRAINS` in `engine.mjs` defines 4 strains: Garage OG, Midnight Purple, Citrus Riot, Frostbite (name, grow time, seed cost, order value, unlock by lifetime sales). Real art is in `assets/v2/<id>-{starter,young,developed,ready,seed,jar}.webp`; Garage OG reuses the original base sprites for its growth stages. A strain without its own art can set `art:false` plus a CSS `tint` to reuse the OG sprites. Bryce only buys `tier>=2` jars; order pay scales by the `value` of the jars used. The art is still marked as needing alpha-edge cleanup and in-game alignment QA.
+
+## Upgrades and staged art (tier-2 batch)
+
+Build-tab upgrades now include Pro LED lights (all crops grow 20% faster, swaps lamps to `lamp-pro`), Trim workstation (+2 jars per harvest, swaps the bench to `bench-pro`) and Inline ventilation (removes the fan incident, adds the `vent` prop). Lamp cables hang from eyelets that `scene.mjs` detects from each lamp sprite, so new lamp art works without hard-coded positions. Delivering an order shows the buyer's `-happy` portrait with the `carton`.
+
+Converted but not used yet (staged for the next features): `shelves-pro` (tier-2 storage), `tray-buds`, `branch` (dry and cure step), `flood-tray` (watering), `door`, `room-industrial` (second location). Originals are in `art/png-masters/tier2-batch/`.
