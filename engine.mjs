@@ -12,7 +12,7 @@ export const STRAIN_IDS=Object.keys(STRAINS);
 export const OFFERS=[{id:'tony',name:'Tony’s Dispensary',need:8,pay:640,line:'Put a label on it this time. My customers ask questions.'},{id:'bryce',name:'Bryce Botanicals',need:12,pay:1040,minTier:2,line:'It’s not expensive. It’s an elevated brand experience.'},{id:'rick',name:'Cousin Rick',need:4,pay:260,line:'Small order. Big dreams. Terrible parking.'}];
 export const UPGRADES=[{id:'expansion',name:'More grow space',cost:600,art:'storage',description:'Unlock two more pots and install storage shelves.'},{id:'equipment',name:'Better equipment',cost:900,art:'rack',description:'Upgrade production: 15 jars per harvest instead of 12.'},{id:'staff',name:'Hire Marcus',cost:1200,art:'marcus-portrait',description:'Marcus replants every harvested pot for free. You still collect the crops.'}];
 export const SKINS=[{id:'rack',name:'Black & Gold rack',price:150},{id:'lamp',name:'Black & Gold light',price:100},{id:'bench',name:'Black & Gold bench',price:200},{id:'storage',name:'Black & Gold shelves',price:150}];
-export function fresh(now=Date.now()){return{version:2,cash:500,jars:0,sold:0,harvests:0,testCredits:1000,upgrades:{expansion:false,equipment:false,staff:false},slots:[now-DURATION,now-DURATION,now-60000,now-30000,null,null],kinds:['og','og','og','og',null,null],stock:Object.fromEntries(STRAIN_IDS.map(id=>[id,0])),owned:[],equipped:[],sound:false,lastSeen:now,event:null,nextEvent:now+90000,lastEvent:null};}
+export function fresh(now=Date.now()){return{version:2,cash:500,jars:0,sold:0,harvests:0,testCredits:1000,upgrades:{expansion:false,equipment:false,staff:false},slots:[now-DURATION,now-DURATION,now-60000,now-30000,null,null],kinds:['og','og','og','og',null,null],stock:Object.fromEntries(STRAIN_IDS.map(id=>[id,0])),owned:[],equipped:[],sound:false,lastSeen:now,event:null,nextEvent:now+90000,lastEvent:null,crew:0};}
 export function normalize(raw,now=Date.now()){
  const s=fresh(now);if(!raw||typeof raw!=='object')return s;
  for(const k of ['cash','jars','sold','harvests'])if(Number.isFinite(raw[k])&&raw[k]>=0)s[k]=Math.floor(raw[k]);
@@ -22,7 +22,7 @@ export function normalize(raw,now=Date.now()){
  const rk=k=>ALIAS[k]||k;s.kinds=s.slots.map((t,i)=>t===null?null:(STRAINS[rk(raw.kinds?.[i])]?rk(raw.kinds[i]):'og'));
  s.stock={og:0};for(const id of STRAIN_IDS){const old=Object.keys(ALIAS).find(k=>ALIAS[k]===id);const n=raw.stock?.[id]??raw.stock?.[old];s.stock[id]=Number.isFinite(n)&&n>0?Math.floor(n):0;}
  if(!raw.stock)s.stock.og=s.jars;sync(s);
- s.event=EVENTS.some(x=>x.id===raw.event?.id)?{id:raw.event.id,at:Number.isFinite(raw.event.at)?raw.event.at:now}:null;s.lastEvent=EVENTS.some(x=>x.id===raw.lastEvent)?raw.lastEvent:null;s.nextEvent=Number.isFinite(raw.nextEvent)?raw.nextEvent:now+90000;
+ s.event=EVENTS.some(x=>x.id===raw.event?.id)?{id:raw.event.id,at:Number.isFinite(raw.event.at)?raw.event.at:now}:null;s.crew=Number.isFinite(raw.crew)&&raw.crew>0?Math.min(10,Math.floor(raw.crew)):0;s.lastEvent=EVENTS.some(x=>x.id===raw.lastEvent)?raw.lastEvent:null;s.nextEvent=Number.isFinite(raw.nextEvent)?raw.nextEvent:now+90000;
  s.sound=Boolean(raw.sound);s.lastSeen=Number.isFinite(raw.lastSeen)?raw.lastSeen:now;return s;
 }
 export function progress(t,now=Date.now(),dur=DURATION){return t===null?0:Math.min(1,Math.max(0,(now-t)/dur));}
@@ -37,7 +37,7 @@ export function total(s){return STRAIN_IDS.reduce((n,id)=>n+(s.stock[id]||0),0);
 export function sync(s){const d=s.jars-total(s);if(d>0)s.stock.og=(s.stock.og||0)+d;else if(d<0){let r=-d;for(const id of STRAIN_IDS){const t=Math.min(r,s.stock[id]||0);s.stock[id]=(s.stock[id]||0)-t;r-=t;}}}
 export function readyCount(s,now=Date.now()){return s.slots.filter((t,i)=>t!==null&&prog(s,i,now)>=1).length;}
 export function plant(s,i,now=Date.now(),id='og'){const st=STRAINS[id];if(!st)return{ok:false,message:'Unknown strain.'};if(!Number.isInteger(i)||i<0||i>=s.slots.length)return{ok:false,message:'Invalid slot.'};if(s.slots[i]!==null)return{ok:false,message:'This pot is already growing.'};if(!isUnlocked(s,id))return{ok:false,message:`${st.name} unlocks at $${st.unlock.toLocaleString()} lifetime sales.`};if(s.cash<st.cost)return{ok:false,message:`${st.name} seeds cost $${st.cost}. Sell your jars first.`};s.cash-=st.cost;s.slots[i]=now;s.kinds[i]=id;return{ok:true,message:`${st.name} planted · ready in ${Math.round(st.time/1000)} seconds.`};}
-export function harvest(s,i,now=Date.now()){if(!Number.isInteger(i)||i<0||i>=s.slots.length||s.slots[i]===null||prog(s,i,now)<1)return{ok:false,message:'This crop is not ready yet.'};const id=s.kinds[i]||'og',jars=Math.round(STRAINS[id].jars*(s.upgrades.equipment?1.25:1));sync(s);s.jars+=jars;s.stock[id]=(s.stock[id]||0)+jars;s.harvests++;if(s.upgrades.staff)s.slots[i]=now;else{s.slots[i]=null;s.kinds[i]=null;}return{ok:true,jars,id,message:`${STRAINS[id].name} harvested · +${jars} jars${s.upgrades.staff?' · Marcus replanted':''}`};}
+export function harvest(s,i,now=Date.now()){if(!Number.isInteger(i)||i<0||i>=s.slots.length||s.slots[i]===null||prog(s,i,now)<1)return{ok:false,message:'This crop is not ready yet.'};const id=s.kinds[i]||'og',jars=Math.round(STRAINS[id].jars*(s.upgrades.equipment?1.25:1))+(s.crew>0?2:0);if(s.crew>0)s.crew--;sync(s);s.jars+=jars;s.stock[id]=(s.stock[id]||0)+jars;s.harvests++;if(s.upgrades.staff)s.slots[i]=now;else{s.slots[i]=null;s.kinds[i]=null;}return{ok:true,jars,id,message:`${STRAINS[id].name} harvested · +${jars} jars${s.upgrades.staff?' · Marcus replanted':''}`};}
 export function eligible(s,o){sync(s);return STRAIN_IDS.filter(id=>STRAINS[id].tier>=(o.minTier||1)).reduce((n,id)=>n+(s.stock[id]||0),0);}
 export function sell(s,id){const o=OFFERS.find(o=>o.id===id);if(!o)return{ok:false,message:'Unknown buyer.'};const have=eligible(s,o);if(have<o.need)return{ok:false,message:o.minTier&&total(s)>=o.need?`${o.name} only takes premium strains. Need ${o.need-have} more.`:`You need ${o.need-s.jars} more jars.`};let r=o.need,val=0;for(const sid of STRAIN_IDS.filter(x=>STRAINS[x].tier>=(o.minTier||1))){const t=Math.min(r,s.stock[sid]||0);s.stock[sid]-=t;r-=t;val+=t*STRAINS[sid].value;}const pay=Math.round(o.pay*val/o.need);s.jars-=o.need;s.cash+=pay;s.sold+=pay;return{ok:true,pay,message:`Order delivered · +$${pay.toLocaleString()}`};}
 export function buyUpgrade(s,id){const u=UPGRADES.find(u=>u.id===id);if(!u||s.upgrades[id])return{ok:false,message:'Upgrade already installed.'};if(s.cash<u.cost)return{ok:false,message:'Earn more game cash by completing orders.'};s.cash-=u.cost;s.upgrades[id]=true;if(id==='expansion')s.slots.push(null,null);s.kinds.push(null,null);return{ok:true,message:u.name+' unlocked.'};}
@@ -51,10 +51,18 @@ export const EVENTS=[
   options:[{id:'repair',label:'Pay $80 for a proper repair',hint:'Safe. Dale is offended.',cost:80},{id:'dale',label:'Let Dale handle it',hint:'Free. 50% it works, 50% your crops sweat and run 15% slower.'}]},
  {id:'inspection',title:'Landlord scheduled an inspection',art:null,body:'"Just checking the garage. Why is it so humid in here?"',
   options:[{id:'tarps',label:'Hide everything with tarps ($60)',hint:'Safe. He leaves suspicious but satisfied.',cost:60},{id:'wing',label:'Wing it',hint:'55%: he’s oddly impressed and tips you $200. 45%: $150 fine.'}]},
+ {id:'friend',title:'Rick brought a friend',art:'rick',body:'"This is Kyle. Kyle is very motivated." Kyle is holding a gas-station hot dog and has not made eye contact.',
+  options:[{id:'hire',label:'Hire Kyle for $100',hint:'He trims fast: your next 3 harvests give +2 jars each.',cost:100},{id:'trial',label:'Free trial shift',hint:'50%: he trims 4 extra Garage OG jars. 50%: he samples 3 jars.'}]},
+ {id:'contest',title:'A rival challenges you to a contest',art:'bryce',body:'"Best flower in town. Judges are impartial." The judges are his cousins.',
+  options:[{id:'enter',label:'Enter 4 premium jars',hint:'Needs 4 jars of tier 2+. Odds rise with strain tier. Win $800.',jars:4,minTier:2},{id:'skip',label:'Decline politely',hint:'Nothing happens. Your pride takes a small hit.'}]},
+ {id:'packaging',title:'Bryce wants luxury packaging',art:'bryce',body:'"Premium presentation. Matte black. Embossed. Also, it should be cheap."',
+  options:[{id:'pack',label:'Rebrand 6 jars for $120',hint:'Uses your lowest-tier jars. Pays 130 per jar-value. Needs 6 jars.',cost:120,jars:6},{id:'artisanal',label:'Insist it is already artisanal',hint:'50%: he is moved and pays $250. 50%: he asks for the manager.'}]},
  {id:'celebrity',title:'A celebrity mentioned your brand',art:'tony',body:'Sort of. They said "some guy in a garage." Phones are ringing anyway.',
   options:[{id:'rush',label:'Fill a rush order: 6 jars for double pay',hint:'Uses your lowest-tier jars. Needs 6 jars in stock.',jars:6},{id:'hype',label:'Ride the hype',hint:'No stock needed. A fan "tips" you $150 and a weird poem.'}]}
 ];
-export function optionOk(s,o){sync(s);return(!o.cost||s.cash>=o.cost)&&(!o.jars||s.jars>=o.jars);}
+export function takeJars(s,n,minTier=1){sync(s);let r=n,val=0,maxTier=0;for(const sid of STRAIN_IDS.filter(x=>STRAINS[x].tier>=minTier)){const t=Math.min(r,s.stock[sid]||0);if(t>0)maxTier=Math.max(maxTier,STRAINS[sid].tier);s.stock[sid]=(s.stock[sid]||0)-t;r-=t;val+=t*STRAINS[sid].value;}s.jars-=n-r;return{val,maxTier,taken:n-r};}
+function eligibleJars(s,minTier){return STRAIN_IDS.filter(id=>STRAINS[id].tier>=minTier).reduce((n,id)=>n+(s.stock[id]||0),0);}
+export function optionOk(s,o){sync(s);return(!o.cost||s.cash>=o.cost)&&(!o.jars||eligibleJars(s,o.minTier||1)>=o.jars);}
 export function maybeEvent(s,now=Date.now(),rng=Math.random){
  if(s.event||now<s.nextEvent||s.harvests<2)return null;
  const pool=EVENTS.filter(x=>x.id!==s.lastEvent),ev=pool[Math.floor(rng()*pool.length)];
@@ -74,8 +82,19 @@ export function resolveEvent(s,optId,now=Date.now(),rng=Math.random){
   if(o.id==='tarps')message='He saw a very clean garage and left suspicious but satisfied.';
   else if(rng()<.55){s.cash+=200;message='He asked if you sell "that lemon thing" and tipped you $200.';}
   else{const f=Math.min(150,s.cash);s.cash-=f;message=`Fined ${money(f)} for "unpermitted humidity".`;}
+ }else if(ev.id==='friend'){
+  if(o.id==='hire'){s.crew=Math.min(10,s.crew+3);message='Kyle is on the payroll. He trims like his life depends on it.';}
+  else if(rng()<.5){s.jars+=4;s.stock.og+=4;message='Kyle trimmed 4 extra Garage OG jars and has not stopped talking about it.';}
+  else{const t=takeJars(s,3).taken;message=t?`Kyle sampled ${t} jars. He is now very relaxed and not very useful.`:'Kyle looked at your empty shelves and left.';}
+ }else if(ev.id==='contest'){
+  if(o.id==='skip')message='You declined. Someone local is already telling a different story.';
+  else{const{maxTier}=takeJars(s,4,2);if(rng()<.3+.1*maxTier){s.cash+=800;s.sold+=800;message='You won the contest. The judges were tied on cousins. +$800';}else message='You lost. The winning jar was suspiciously glossy.';}
+ }else if(ev.id==='packaging'){
+  if(o.id==='pack'){const{val}=takeJars(s,6);const pay=Math.round(val*130);s.cash+=pay;s.sold+=pay;message=`Matte black. Embossed. Cheap. Bryce paid ${money(pay)}.`;}
+  else if(rng()<.5){s.cash+=250;s.sold+=250;message='Bryce was moved by your confidence. +$250';}
+  else message='He asked for the manager. You are the manager.';
  }else if(ev.id==='celebrity'){
-  if(o.id==='rush'){let r=6,val=0;for(const sid of STRAIN_IDS){const t=Math.min(r,s.stock[sid]||0);s.stock[sid]-=t;r-=t;val+=t*STRAINS[sid].value;}const pay=Math.round(val*160);s.jars-=6;s.cash+=pay;s.sold+=pay;message=`Rush order delivered · +${money(pay)}`;}
+  if(o.id==='rush'){const{val}=takeJars(s,6);const pay=Math.round(val*160);s.cash+=pay;s.sold+=pay;message=`Rush order delivered · +${money(pay)}`;}
   else{s.cash+=150;message='A fan tipped you $150 and left a weird poem.';}
  }
  s.event=null;s.lastEvent=ev.id;s.nextEvent=now+120000+Math.round(rng()*120000);
