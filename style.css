@@ -26,3 +26,11 @@ nav button{min-height:48px;padding:6px 4px}nav button span{font-size:19px;margin
 .inventory-grid{grid-template-columns:repeat(2,1fr)}
 
 .ev-opt{width:100%}
+
+.fx-float{position:absolute;z-index:3000;transform:translate(-50%,0);font:700 30px 'Barlow Condensed',sans-serif;letter-spacing:1px;text-shadow:0 2px 6px #000d,0 0 14px #c7ef8388;pointer-events:none;animation:fxFloat 1.4s ease-out forwards;white-space:nowrap}
+@keyframes fxFloat{0%{opacity:0;transform:translate(-50%,10px) scale(.7)}15%{opacity:1;transform:translate(-50%,0) scale(1.15)}100%{opacity:0;transform:translate(-50%,-70px) scale(1)}}
+.fx-spark{position:absolute;z-index:2999;width:7px;height:7px;margin:-3px;border-radius:50%;background:#e8ffb0;box-shadow:0 0 8px #c7ef83;pointer-events:none;animation:fxSpark .85s ease-out forwards}
+@keyframes fxSpark{from{opacity:1;transform:translate(0,0) scale(1)}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3)}}
+.slot-tag.ready{animation:readyPulse 1.6s ease-in-out infinite}
+@keyframes readyPulse{0%,100%{box-shadow:0 5px 12px #0005,0 0 0 0 #c7ef8300}50%{box-shadow:0 5px 12px #0005,0 0 14px 2px #c7ef8355}}
+.wallets b.cash-up{color:var(--lime);transition:color .2s}

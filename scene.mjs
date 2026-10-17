@@ -12,7 +12,7 @@ export async function loadArt(){return Promise.allSettled(ids.map(prepare));}
 export function sprite(id){return cache.get(id)?.url??ART+id+'.webp';}
 // Plant art for a strain at a growth stage; strains without their own art reuse the base sprites (tinted via CSS).
 export function plantArt(kind,st){const own=STRAINS[kind]?.art&&kind!=='og'?kind+'-'+st:st;return{id:own,url:sprite(own),root:cache.get(own)?.root??.5,tint:STRAINS[kind]?.art?'':(STRAINS[kind]?.tint||'')};}
-const XY=[[470,420],[640,460],[810,500],[335,505],[505,550],[675,595],[370,640],[540,685]];
+export const XY=[[470,420],[640,460],[810,500],[335,505],[505,550],[675,595],[370,640],[540,685]];
 let preview=null;
 export function setPreview(id){preview=id;}
 function skin(s,id){return preview===id||s.equipped.includes(id)?'gold-'+id:id;}
@@ -29,3 +29,9 @@ export function updateSlots(s,now=Date.now()){
 s.slots.forEach((t,i)=>{const b=document.querySelector(`[data-slot="${i}"]`);if(!b)return;const p=prog(s,i,now),kind=s.kinds[i],st=t===null?null:STRAINS[kind]||STRAINS.og,key=t===null?'empty':kind+':'+stg(s,i,now);const tg=document.querySelector(`[data-tag="${i}"]`);for(const el of[b,tg]){el.classList.toggle('ready',t!==null&&p>=1);el.classList.toggle('empty',t===null);}b.setAttribute('aria-label',`Pot ${i+1}: ${t===null?'empty, tap to choose a strain':p>=1?st.name+' ready to harvest':st.name+', '+left(s,i,now)+' seconds remaining'}`);
 if(b.dataset.stage!==key){b.dataset.stage=key;const height={starter:35,young:85,developed:140,ready:180}[stg(s,i,now)];const a=t===null?null:plantArt(kind,stg(s,i,now));b.querySelector('.foliage').innerHTML=t===null?'':`<img src="${a.url}" alt="" style="height:${height}px;transform:translateX(-${a.root*100}%);${a.tint?'filter:'+a.tint+';':''}">`;}
 tg.innerHTML=t===null?`<b>＋ PLANT</b><small>Pick a strain</small>`:p>=1?'<b>✳ READY</b><small>Tap to harvest</small>':`<b>${st.name.toUpperCase()}</b><small>${left(s,i,now)}s <i><em style="width:${p*100}%"></em></i></small>`;});}
+
+// Harvest feedback: a floating label and a small sparkle burst above a pot.
+export function burst(i,text,color='#c7ef83'){const w=document.querySelector('#world'),p=XY[i];if(!w||!p)return;
+const f=document.createElement('div');f.className='fx-float';f.textContent=text;f.style.cssText=`left:${p[0]}px;top:${p[1]-150}px;color:${color}`;w.append(f);
+for(let k=0;k<12;k++){const a=Math.PI*2*k/12+Math.random()*.4,d=40+Math.random()*50,sp=document.createElement('i');sp.className='fx-spark';sp.style.cssText=`left:${p[0]}px;top:${p[1]-100}px;--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d-30}px`;w.append(sp);setTimeout(()=>sp.remove(),900);}
+setTimeout(()=>f.remove(),1500);}
