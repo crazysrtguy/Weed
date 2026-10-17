@@ -25,8 +25,10 @@ return`<svg class="rig" width="1200" height="800" viewBox="0 0 1200 800" style="
 +eyes.map(([cx,cy])=>`<line x1="${cx+.8}" y1="${cy}" x2="${cx+.8}" y2="-80" stroke="#000" stroke-opacity=".35" stroke-width="1.6"/><line x1="${cx}" y1="${cy}" x2="${cx}" y2="-80" stroke="#8b9096" stroke-width="1.2"/>`).join('')+`</svg>`;}
 // Overhead steel gantry (warped to the room's floor axes) that the lamps hang from; sits behind pots, plants and lamps.
 const RIG=`<img class="rig-img" src="${ART}rig-world.webp" alt="" draggable="false" style="left:97.5px;top:-50.5px;width:867px">`;
-export function renderProps(s){let html=RIG+prop('coffee',1030,490,95,470)+prop(skin(s,'bench'),750,300,210,290)+prop('poster',270,230,60,200)+prop('sign',660,190,145,170)+prop('fan',1040,600,65,590)+prop(skin(s,'rack'),920,420,180,390);
+export function renderProps(s){let html=RIG+prop('coffee',1030,490,95,470)+prop(skin(s,'bench'),750,300,210,290)+prop('poster',270,230,60,200)+prop('sign',660,190,145,170)+prop('fan',1040,600,65,590);
 html+=`<div class="business-name" style="left:660px;top:150px">YOUR GARAGE</div>`;
+// The rack is the visible "Better equipment" upgrade (or a preview of its skin), placed clear of the gantry.
+if(s.upgrades.equipment||preview==='rack'||s.equipped.includes('rack'))html+=prop(skin(s,'rack'),1085,430,170,420);
 if(s.upgrades.expansion||preview==='storage')html+=prop(skin(s,'storage'),980,340,150,330);
 if(s.upgrades.staff)html+=prop('marcus',630,320,72,310,'worker');
 // Lamps hang 70px higher than the pools/plants beneath them so tall ready plants clear the fixture.
