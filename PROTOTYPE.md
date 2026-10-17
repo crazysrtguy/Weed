@@ -17,3 +17,7 @@ Art uses existing generated masters, resized as WebP runtime assets. Canvas supp
 Build-tab upgrades now include Pro LED lights (all crops grow 20% faster, swaps lamps to `lamp-pro`), Trim workstation (+2 jars per harvest, swaps the bench to `bench-pro`) and Inline ventilation (removes the fan incident, adds the `vent` prop). Lamp cables hang from eyelets that `scene.mjs` detects from each lamp sprite, so new lamp art works without hard-coded positions. Delivering an order shows the buyer's `-happy` portrait with the `carton`.
 
 Converted but not used yet (staged for the next features): `shelves-pro` (tier-2 storage), `tray-buds`, `branch` (dry and cure step), `flood-tray` (watering), `door`, `room-industrial` (second location). Originals are in `art/png-masters/tier2-batch/`.
+
+## Care and maintenance
+
+Growing pots ask for **Water** at 33% growth and **Feed** at 66%; each completed task adds +15% jars at harvest, and neglect only forgoes the bonus (crops never die). Tap the glowing pot label, or use **Tend all** (it becomes **Harvest & tend** when crops are also ready). **Flood tray irrigation** (upgrade, uses `flood-tray` art) waters automatically; **Marcus** feeds automatically. Lamps and filters **wear** with each harvest (half as fast with ventilation); at the limit crops grow 25% slower and lamps render dim until a $120 **service** in the Build tab. Logic lives in `engine.mjs` (`careNeeded`, `tend`, `tendAll`, `service`, `WEAR_LIMIT`).
