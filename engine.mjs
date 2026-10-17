@@ -12,7 +12,7 @@ export const STRAIN_IDS=Object.keys(STRAINS);
 export const OFFERS=[{id:'tony',name:'Tony’s Dispensary',need:8,pay:640,line:'Put a label on it this time. My customers ask questions.'},{id:'bryce',name:'Bryce Botanicals',need:12,pay:1040,minTier:2,line:'It’s not expensive. It’s an elevated brand experience.'},{id:'rick',name:'Cousin Rick',need:4,pay:260,line:'Small order. Big dreams. Terrible parking.'}];
 export const UPGRADES=[{id:'expansion',name:'More grow space',cost:600,art:'storage',description:'Unlock two more pots and install storage shelves.'},{id:'equipment',name:'Better equipment',cost:900,art:'rack',description:'Upgrade production: 15 jars per harvest instead of 12.'},{id:'staff',name:'Hire Marcus',cost:1200,art:'marcus-portrait',description:'Marcus replants every harvested pot for free. You still collect the crops.'}];
 export const SKINS=[{id:'rack',name:'Black & Gold rack',price:150},{id:'lamp',name:'Black & Gold light',price:100},{id:'bench',name:'Black & Gold bench',price:200},{id:'storage',name:'Black & Gold shelves',price:150}];
-export function fresh(now=Date.now()){return{version:2,cash:500,jars:0,sold:0,harvests:0,testCredits:1000,upgrades:{expansion:false,equipment:false,staff:false},slots:[now-DURATION,now-DURATION,now-60000,now-30000,null,null],kinds:['og','og','og','og',null,null],stock:Object.fromEntries(STRAIN_IDS.map(id=>[id,0])),owned:[],equipped:[],sound:false,lastSeen:now,event:null,nextEvent:now+90000,lastEvent:null,crew:0};}
+export function fresh(now=Date.now()){return{version:2,cash:500,jars:0,sold:0,harvests:0,testCredits:1000,upgrades:{expansion:false,equipment:false,staff:false},slots:[now-DURATION,now-DURATION,now-60000,now-30000,null,null],kinds:['og','og','og','og',null,null],stock:Object.fromEntries(STRAIN_IDS.map(id=>[id,0])),owned:[],equipped:[],sound:false,lastSeen:now,event:null,nextEvent:now+90000,lastEvent:null,crew:0,planted:0,tut:0};}
 export function normalize(raw,now=Date.now()){
  const s=fresh(now);if(!raw||typeof raw!=='object')return s;
  for(const k of ['cash','jars','sold','harvests'])if(Number.isFinite(raw[k])&&raw[k]>=0)s[k]=Math.floor(raw[k]);
@@ -22,7 +22,7 @@ export function normalize(raw,now=Date.now()){
  const rk=k=>ALIAS[k]||k;s.kinds=s.slots.map((t,i)=>t===null?null:(STRAINS[rk(raw.kinds?.[i])]?rk(raw.kinds[i]):'og'));
  s.stock={og:0};for(const id of STRAIN_IDS){const old=Object.keys(ALIAS).find(k=>ALIAS[k]===id);const n=raw.stock?.[id]??raw.stock?.[old];s.stock[id]=Number.isFinite(n)&&n>0?Math.floor(n):0;}
  if(!raw.stock)s.stock.og=s.jars;sync(s);
- s.event=EVENTS.some(x=>x.id===raw.event?.id)?{id:raw.event.id,at:Number.isFinite(raw.event.at)?raw.event.at:now}:null;s.crew=Number.isFinite(raw.crew)&&raw.crew>0?Math.min(10,Math.floor(raw.crew)):0;s.lastEvent=EVENTS.some(x=>x.id===raw.lastEvent)?raw.lastEvent:null;s.nextEvent=Number.isFinite(raw.nextEvent)?raw.nextEvent:now+90000;
+ s.event=EVENTS.some(x=>x.id===raw.event?.id)?{id:raw.event.id,at:Number.isFinite(raw.event.at)?raw.event.at:now}:null;s.planted=Number.isFinite(raw.planted)&&raw.planted>0?Math.floor(raw.planted):0;s.tut=Number.isInteger(raw.tut)&&raw.tut>=0&&raw.tut<=TUT_DONE?raw.tut:(s.harvests>0?TUT_DONE:0);s.crew=Number.isFinite(raw.crew)&&raw.crew>0?Math.min(10,Math.floor(raw.crew)):0;s.lastEvent=EVENTS.some(x=>x.id===raw.lastEvent)?raw.lastEvent:null;s.nextEvent=Number.isFinite(raw.nextEvent)?raw.nextEvent:now+90000;
  s.sound=Boolean(raw.sound);s.lastSeen=Number.isFinite(raw.lastSeen)?raw.lastSeen:now;return s;
 }
 export function progress(t,now=Date.now(),dur=DURATION){return t===null?0:Math.min(1,Math.max(0,(now-t)/dur));}
@@ -36,7 +36,7 @@ export function total(s){return STRAIN_IDS.reduce((n,id)=>n+(s.stock[id]||0),0);
 // Keep per-strain stock and the legacy jar total in agreement (legacy writes go to Garage OG).
 export function sync(s){const d=s.jars-total(s);if(d>0)s.stock.og=(s.stock.og||0)+d;else if(d<0){let r=-d;for(const id of STRAIN_IDS){const t=Math.min(r,s.stock[id]||0);s.stock[id]=(s.stock[id]||0)-t;r-=t;}}}
 export function readyCount(s,now=Date.now()){return s.slots.filter((t,i)=>t!==null&&prog(s,i,now)>=1).length;}
-export function plant(s,i,now=Date.now(),id='og'){const st=STRAINS[id];if(!st)return{ok:false,message:'Unknown strain.'};if(!Number.isInteger(i)||i<0||i>=s.slots.length)return{ok:false,message:'Invalid slot.'};if(s.slots[i]!==null)return{ok:false,message:'This pot is already growing.'};if(!isUnlocked(s,id))return{ok:false,message:`${st.name} unlocks at $${st.unlock.toLocaleString()} lifetime sales.`};if(s.cash<st.cost)return{ok:false,message:`${st.name} seeds cost $${st.cost}. Sell your jars first.`};s.cash-=st.cost;s.slots[i]=now;s.kinds[i]=id;return{ok:true,message:`${st.name} planted · ready in ${Math.round(st.time/1000)} seconds.`};}
+export function plant(s,i,now=Date.now(),id='og'){const st=STRAINS[id];if(!st)return{ok:false,message:'Unknown strain.'};if(!Number.isInteger(i)||i<0||i>=s.slots.length)return{ok:false,message:'Invalid slot.'};if(s.slots[i]!==null)return{ok:false,message:'This pot is already growing.'};if(!isUnlocked(s,id))return{ok:false,message:`${st.name} unlocks at $${st.unlock.toLocaleString()} lifetime sales.`};if(s.cash<st.cost)return{ok:false,message:`${st.name} seeds cost $${st.cost}. Sell your jars first.`};s.cash-=st.cost;s.slots[i]=now;s.kinds[i]=id;s.planted++;return{ok:true,message:`${st.name} planted · ready in ${Math.round(st.time/1000)} seconds.`};}
 export function harvest(s,i,now=Date.now()){if(!Number.isInteger(i)||i<0||i>=s.slots.length||s.slots[i]===null||prog(s,i,now)<1)return{ok:false,message:'This crop is not ready yet.'};const id=s.kinds[i]||'og',jars=Math.round(STRAINS[id].jars*(s.upgrades.equipment?1.25:1))+(s.crew>0?2:0);if(s.crew>0)s.crew--;sync(s);s.jars+=jars;s.stock[id]=(s.stock[id]||0)+jars;s.harvests++;if(s.upgrades.staff)s.slots[i]=now;else{s.slots[i]=null;s.kinds[i]=null;}return{ok:true,jars,id,message:`${STRAINS[id].name} harvested · +${jars} jars${s.upgrades.staff?' · Marcus replanted':''}`};}
 export function eligible(s,o){sync(s);return STRAIN_IDS.filter(id=>STRAINS[id].tier>=(o.minTier||1)).reduce((n,id)=>n+(s.stock[id]||0),0);}
 export function sell(s,id){const o=OFFERS.find(o=>o.id===id);if(!o)return{ok:false,message:'Unknown buyer.'};const have=eligible(s,o);if(have<o.need)return{ok:false,message:o.minTier&&total(s)>=o.need?`${o.name} only takes premium strains. Need ${o.need-have} more.`:`You need ${o.need-s.jars} more jars.`};let r=o.need,val=0;for(const sid of STRAIN_IDS.filter(x=>STRAINS[x].tier>=(o.minTier||1))){const t=Math.min(r,s.stock[sid]||0);s.stock[sid]-=t;r-=t;val+=t*STRAINS[sid].value;}const pay=Math.round(o.pay*val/o.need);s.jars-=o.need;s.cash+=pay;s.sold+=pay;return{ok:true,pay,message:`Order delivered · +$${pay.toLocaleString()}`};}
@@ -101,3 +101,15 @@ export function resolveEvent(s,optId,now=Date.now(),rng=Math.random){
  return{ok:true,message};
 }
 function money(n){return'$'+Math.round(n).toLocaleString();}
+
+// ---- First-time tutorial: 0 harvest a crop, 1 harvest all, 2 open Orders, 3 deliver Tony, 4 plant a strain, 5 open Build ----
+export const TUT_DONE=6;
+export const TUTORIAL=[
+ {text:'Your first crops are ready. Tap a glowing pot label to harvest.'},
+ {text:'Collect everything that is ready at once with Harvest all.'},
+ {text:'Buyers want your jars. Open Orders.'},
+ {text:'Tony pays $640 for 8 jars. Deliver his order.'},
+ {text:'Empty pot? Tap it, pick a strain, and keep the cycle going.'},
+ {text:'Cash buys upgrades. Open Build to see what is next.'}
+];
+export function tutorialAdvance(s,ctx={}){let n=0;while(s.tut<TUT_DONE){const t=s.tut,ok=t===0?s.harvests>=1:t===1?s.harvests>=2||readyCount(s)===0:t===2?ctx.tab==='orders':t===3?s.sold>0:t===4?s.planted>=1:ctx.tab==='build';if(!ok)break;s.tut++;n++;}return n;}

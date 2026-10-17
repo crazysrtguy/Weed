@@ -34,3 +34,10 @@ nav button{min-height:48px;padding:6px 4px}nav button span{font-size:19px;margin
 .slot-tag.ready{animation:readyPulse 1.6s ease-in-out infinite}
 @keyframes readyPulse{0%,100%{box-shadow:0 5px 12px #0005,0 0 0 0 #c7ef8300}50%{box-shadow:0 5px 12px #0005,0 0 14px 2px #c7ef8355}}
 .wallets b.cash-up{color:var(--lime);transition:color .2s}
+
+#coach{position:fixed;left:50%;transform:translateX(-50%);top:62px;width:min(92vw,520px);z-index:2600;display:flex;align-items:center;gap:12px;background:#10191ef5;border:1px solid var(--lime);border-radius:10px;padding:10px 14px;box-shadow:0 10px 40px #000a;font-size:13px}
+#coach .coach-n{font-size:9px;letter-spacing:2px;color:var(--lime);white-space:nowrap}#coach b{flex:1;font-weight:600;line-height:1.4}#coach button{background:none;border:0;color:var(--muted);font-size:11px;min-height:32px;padding:0 4px}
+.tut-glow{outline:3px solid var(--lime)!important;outline-offset:3px;animation:tutGlow 1s ease-in-out infinite}
+nav button.tut-glow{outline-offset:-5px}
+@keyframes tutGlow{50%{outline-color:#c7ef8333}}
+@media(max-width:600px),(max-height:760px){#coach{top:104px;padding:8px 12px}}
