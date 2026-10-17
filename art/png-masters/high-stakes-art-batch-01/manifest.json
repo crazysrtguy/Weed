@@ -1,0 +1,107 @@
+{
+  "batch": "01",
+  "generation_method": "built-in imagegen",
+  "assets": [
+    {
+      "file": "assets/env-garage-base-v001.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "alpha_range": null,
+      "visible_bounds_alpha_gt_128": null,
+      "sha256": "c0d7b75942bca499818415dfa8c64585ef24a0c3246f963de8eb54b22a1a82ee",
+      "status": "generated_candidate_not_integrated"
+    },
+    {
+      "file": "assets/plant-garage-og-developed-v001.png",
+      "width": 1098,
+      "height": 1432,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "visible_bounds_alpha_gt_128": [
+        8,
+        41,
+        1096,
+        1377
+      ],
+      "sha256": "e710c0e4281d5bc35fd92fd37af7b3cff8ec6a8137a21c31d4da3728a7ddbe4d",
+      "status": "generated_candidate_not_integrated"
+    },
+    {
+      "file": "assets/plant-garage-og-ready-v001.png",
+      "width": 1058,
+      "height": 1487,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "visible_bounds_alpha_gt_128": [
+        11,
+        97,
+        1050,
+        1375
+      ],
+      "sha256": "5eb77276ee76a238ccb7cc13c9eced8fa25e90c6630cda25c026c512aea868f9",
+      "status": "generated_candidate_not_integrated"
+    },
+    {
+      "file": "assets/plant-garage-og-starter-v002.png",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "visible_bounds_alpha_gt_128": [
+        239,
+        1042,
+        785,
+        1381
+      ],
+      "sha256": "0fa0cdaf63b46719aef8cdb72ee218f7ab1299f11c4b09afa9b33dce0b90552f",
+      "status": "generated_candidate_not_integrated"
+    },
+    {
+      "file": "assets/plant-garage-og-young-v002.png",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "visible_bounds_alpha_gt_128": [
+        57,
+        485,
+        973,
+        1345
+      ],
+      "sha256": "372d04d378ea39fbc1802db7b8b19a01a041724281f3fcd5b3af9fc54da35d20",
+      "status": "generated_candidate_not_integrated"
+    },
+    {
+      "file": "assets/pot-fabric-soil-filled-v002.png",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "visible_bounds_alpha_gt_128": [
+        185,
+        922,
+        842,
+        1475
+      ],
+      "sha256": "97faf5d42b094dab78d0faa30eefd6792b37ab745e268ca7aefca1848b863305",
+      "status": "generated_candidate_not_integrated"
+    }
+  ],
+  "acceptance": "Needs alpha-edge cleanup, size/anchor normalization and in-game integration review. Not production approved."
+}

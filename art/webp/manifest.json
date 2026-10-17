@@ -1,0 +1,446 @@
+{
+  "encoding": "lossless WebP",
+  "resized": false,
+  "files": [
+    {
+      "file": "game-assets/high-stakes-art-batch-01/env-garage-base-v001.webp",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "source_bytes": 2871264,
+      "webp_bytes": 1814946,
+      "pixel_check": "passed",
+      "source": "env-garage-base-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-01/plant-garage-og-developed-v001.webp",
+      "width": 1098,
+      "height": 1432,
+      "alpha": true,
+      "source_bytes": 2577916,
+      "webp_bytes": 1799430,
+      "pixel_check": "passed",
+      "source": "plant-garage-og-developed-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-01/plant-garage-og-ready-v001.webp",
+      "width": 1058,
+      "height": 1487,
+      "alpha": true,
+      "source_bytes": 2489291,
+      "webp_bytes": 1746128,
+      "pixel_check": "passed",
+      "source": "plant-garage-og-ready-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-01/plant-garage-og-starter-v002.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": true,
+      "source_bytes": 823105,
+      "webp_bytes": 554490,
+      "pixel_check": "passed",
+      "source": "plant-garage-og-starter-v002.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-01/plant-garage-og-young-v002.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": true,
+      "source_bytes": 1832236,
+      "webp_bytes": 1307236,
+      "pixel_check": "passed",
+      "source": "plant-garage-og-young-v002.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-01/pot-fabric-soil-filled-v002.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": true,
+      "source_bytes": 1300891,
+      "webp_bytes": 853288,
+      "pixel_check": "passed",
+      "source": "pot-fabric-soil-filled-v002.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-02/eq-bench-t1-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1978430,
+      "webp_bytes": 1343304,
+      "pixel_check": "passed",
+      "source": "eq-bench-t1-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-02/eq-fan-t1-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1573081,
+      "webp_bytes": 1006646,
+      "pixel_check": "passed",
+      "source": "eq-fan-t1-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-02/eq-lamp-t1-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1145951,
+      "webp_bytes": 731398,
+      "pixel_check": "passed",
+      "source": "eq-lamp-t1-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-02/eq-rack-t1-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 932204,
+      "webp_bytes": 601928,
+      "pixel_check": "passed",
+      "source": "eq-rack-t1-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-02/eq-storage-t1-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1817958,
+      "webp_bytes": 1175510,
+      "pixel_check": "passed",
+      "source": "eq-storage-t1-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-03/prod-clone-tray-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1896201,
+      "webp_bytes": 1269678,
+      "pixel_check": "passed",
+      "source": "prod-clone-tray-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-03/prod-jar-premium-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1918434,
+      "webp_bytes": 1224698,
+      "pixel_check": "passed",
+      "source": "prod-jar-premium-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-03/prod-jar-reserve-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 2015659,
+      "webp_bytes": 1293606,
+      "pixel_check": "passed",
+      "source": "prod-jar-reserve-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-03/prod-jar-standard-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1463366,
+      "webp_bytes": 925742,
+      "pixel_check": "passed",
+      "source": "prod-jar-standard-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-03/prod-sampler-box-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 2153450,
+      "webp_bytes": 1331256,
+      "pixel_check": "passed",
+      "source": "prod-sampler-box-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-03/prod-seed-packet-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1478073,
+      "webp_bytes": 890974,
+      "pixel_check": "passed",
+      "source": "prod-seed-packet-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-03/prod-shipping-parcel-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1637089,
+      "webp_bytes": 1040392,
+      "pixel_check": "passed",
+      "source": "prod-shipping-parcel-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-04/buyer-bryce-neutral-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 2140575,
+      "webp_bytes": 1277914,
+      "pixel_check": "passed",
+      "source": "buyer-bryce-neutral-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-04/buyer-rick-neutral-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 2625236,
+      "webp_bytes": 1662380,
+      "pixel_check": "passed",
+      "source": "buyer-rick-neutral-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-04/buyer-tony-neutral-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1966243,
+      "webp_bytes": 1210428,
+      "pixel_check": "passed",
+      "source": "buyer-tony-neutral-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-04/char-marcus-body-v001.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": true,
+      "source_bytes": 1922504,
+      "webp_bytes": 1191436,
+      "pixel_check": "passed",
+      "source": "char-marcus-body-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-04/char-marcus-portrait-neutral-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 2374324,
+      "webp_bytes": 1467954,
+      "pixel_check": "passed",
+      "source": "char-marcus-portrait-neutral-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-05/decor-business-sign-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1292605,
+      "webp_bytes": 818496,
+      "pixel_check": "passed",
+      "source": "decor-business-sign-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-05/decor-coffee-station-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1379529,
+      "webp_bytes": 921294,
+      "pixel_check": "passed",
+      "source": "decor-coffee-station-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-05/decor-couch-starter-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1774639,
+      "webp_bytes": 1123640,
+      "pixel_check": "passed",
+      "source": "decor-couch-starter-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-05/decor-poster-frame-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1454392,
+      "webp_bytes": 907768,
+      "pixel_check": "passed",
+      "source": "decor-poster-frame-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-05/decor-tool-chest-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1796560,
+      "webp_bytes": 1213396,
+      "pixel_check": "passed",
+      "source": "decor-tool-chest-v001.png"
+    },
+    {
+      "file": "game-assets/high-stakes-art-batch-05/decor-trophy-cabinet-v001.webp",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "source_bytes": 1474193,
+      "webp_bytes": 956598,
+      "pixel_check": "passed",
+      "source": "decor-trophy-cabinet-v001.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-08eae1c4-158b-489c-ab91-d31663c0e109.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": true,
+      "source_bytes": 882026,
+      "webp_bytes": 600402,
+      "pixel_check": "passed",
+      "source": "exec-08eae1c4-158b-489c-ab91-d31663c0e109.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-3bae6db7-d781-4bbd-8ac9-d24de7845f11.webp",
+      "width": 941,
+      "height": 1672,
+      "alpha": false,
+      "source_bytes": 2369586,
+      "webp_bytes": 1675698,
+      "pixel_check": "passed",
+      "source": "exec-3bae6db7-d781-4bbd-8ac9-d24de7845f11.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-440b4826-b8b2-43fe-bffd-88020aa76fda.webp",
+      "width": 941,
+      "height": 1672,
+      "alpha": false,
+      "source_bytes": 2468410,
+      "webp_bytes": 1764522,
+      "pixel_check": "passed",
+      "source": "exec-440b4826-b8b2-43fe-bffd-88020aa76fda.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-4c99b2ee-03e8-4aeb-9e3a-867c585ec751.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": true,
+      "source_bytes": 1345873,
+      "webp_bytes": 897524,
+      "pixel_check": "passed",
+      "source": "exec-4c99b2ee-03e8-4aeb-9e3a-867c585ec751.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-6bcb023d-17b2-46a9-9d0a-2b5160ff1520.webp",
+      "width": 1216,
+      "height": 1293,
+      "alpha": true,
+      "source_bytes": 2450907,
+      "webp_bytes": 1644286,
+      "pixel_check": "passed",
+      "source": "exec-6bcb023d-17b2-46a9-9d0a-2b5160ff1520.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-7467c63f-dd33-4938-8183-f6372daf057e.webp",
+      "width": 941,
+      "height": 1672,
+      "alpha": false,
+      "source_bytes": 2608698,
+      "webp_bytes": 1809396,
+      "pixel_check": "passed",
+      "source": "exec-7467c63f-dd33-4938-8183-f6372daf057e.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-78c29ca8-813c-4ed0-8bc4-360507dce46b.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": true,
+      "source_bytes": 1858478,
+      "webp_bytes": 1320918,
+      "pixel_check": "passed",
+      "source": "exec-78c29ca8-813c-4ed0-8bc4-360507dce46b.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-7bc2a34e-b302-4d4d-ab65-4c7e35cc31d3.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": false,
+      "source_bytes": 2648514,
+      "webp_bytes": 1728422,
+      "pixel_check": "passed",
+      "source": "exec-7bc2a34e-b302-4d4d-ab65-4c7e35cc31d3.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-88e68ee4-2ab2-4f3b-b604-c59c78ddaa56.webp",
+      "width": 941,
+      "height": 1672,
+      "alpha": false,
+      "source_bytes": 1973717,
+      "webp_bytes": 1421912,
+      "pixel_check": "passed",
+      "source": "exec-88e68ee4-2ab2-4f3b-b604-c59c78ddaa56.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-8b0a0046-5213-406f-b311-806b3a9475c1.webp",
+      "width": 941,
+      "height": 1672,
+      "alpha": false,
+      "source_bytes": 2307534,
+      "webp_bytes": 1690806,
+      "pixel_check": "passed",
+      "source": "exec-8b0a0046-5213-406f-b311-806b3a9475c1.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-9c9b2ea5-4a1d-4bf3-a006-4677c6fe3c06.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": false,
+      "source_bytes": 2937638,
+      "webp_bytes": 1900136,
+      "pixel_check": "passed",
+      "source": "exec-9c9b2ea5-4a1d-4bf3-a006-4677c6fe3c06.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-a2ae08ca-8b0f-494a-ae5e-0bb66e6f3195.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": false,
+      "source_bytes": 2669342,
+      "webp_bytes": 1914646,
+      "pixel_check": "passed",
+      "source": "exec-a2ae08ca-8b0f-494a-ae5e-0bb66e6f3195.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-c33c8f57-0cdc-4cb3-bbfa-c7c5b2bf5ff2.webp",
+      "width": 941,
+      "height": 1672,
+      "alpha": false,
+      "source_bytes": 2204825,
+      "webp_bytes": 1569998,
+      "pixel_check": "passed",
+      "source": "exec-c33c8f57-0cdc-4cb3-bbfa-c7c5b2bf5ff2.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-cfe67116-57ed-4ed7-801c-18e376cb45be.webp",
+      "width": 1024,
+      "height": 1536,
+      "alpha": false,
+      "source_bytes": 2414477,
+      "webp_bytes": 1662718,
+      "pixel_check": "passed",
+      "source": "exec-cfe67116-57ed-4ed7-801c-18e376cb45be.png"
+    },
+    {
+      "file": "references-and-earlier-versions/exec-f0fd5987-1ee3-4b92-a672-2473718d98ca.webp",
+      "width": 941,
+      "height": 1672,
+      "alpha": false,
+      "source_bytes": 2377568,
+      "webp_bytes": 1794748,
+      "pixel_check": "passed",
+      "source": "exec-f0fd5987-1ee3-4b92-a672-2473718d98ca.png"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "prod-seed-packet-v001",
+    "file": "assets/prod-seed-packet-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "prod-clone-tray-v001",
+    "file": "assets/prod-clone-tray-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "prod-jar-standard-v001",
+    "file": "assets/prod-jar-standard-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "prod-jar-premium-v001",
+    "file": "assets/prod-jar-premium-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "prod-jar-reserve-v001",
+    "file": "assets/prod-jar-reserve-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "prod-sampler-box-v001",
+    "file": "assets/prod-sampler-box-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "prod-shipping-parcel-v001",
+    "file": "assets/prod-shipping-parcel-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  }
+]

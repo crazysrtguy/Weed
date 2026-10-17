@@ -1,0 +1,47 @@
+[
+  {
+    "id": "char-marcus-portrait-neutral-v001",
+    "file": "assets/char-marcus-portrait-neutral-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "buyer-tony-neutral-v001",
+    "file": "assets/buyer-tony-neutral-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "buyer-bryce-neutral-v001",
+    "file": "assets/buyer-bryce-neutral-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "buyer-rick-neutral-v001",
+    "file": "assets/buyer-rick-neutral-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "char-marcus-body-v001",
+    "file": "assets/char-marcus-body-v001.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "status": "generated_not_integrated"
+  }
+]

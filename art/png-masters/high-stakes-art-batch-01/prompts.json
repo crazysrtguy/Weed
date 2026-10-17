@@ -1,0 +1,41 @@
+{
+  "tool": "built-in imagegen",
+  "initial": [
+    {
+      "id": "env-garage-base-v001",
+      "ref": "/workspace/scratch/4b89fc0faa61/generated_images/exec-7bc2a34e-b302-4d4d-ab65-4c7e35cc31d3.png",
+      "alpha": false,
+      "prompt": "Use case: stylized-concept. Reference image is visual direction only. Create a production empty-room background for the same realistic 2.5D isometric game. Landscape 3072x2048, 3:2. Camera elevated orthographic-like about 30 degrees, see floor and back/side walls as a cutaway garage. Match reference concrete materials, cool gray palette, understated violet practical lighting, window daylight. Center and lower center floor completely vacant for separately composited plants and equipment. Keep only fixed architecture, wall conduit, windows, doors, worn wall textures, tiny inaccessible wall tools. No plants, no people, no pots, no racks, no furniture, no workbench, no cabinets, no hanging moveable lights, no UI, no words, no logos. Remove foreground blocking walls to keep lower floor accessible. Detailed believable videogame environment, clean reusable empty scene, soft baked ambient shadows."
+    },
+    {
+      "id": "pot-fabric-soil-filled-v001",
+      "ref": "/workspace/scratch/4b89fc0faa61/generated_images/exec-6bcb023d-17b2-46a9-9d0a-2b5160ff1520.png",
+      "alpha": true,
+      "prompt": "Use case: stylized-concept. Production individual 2.5D game sprite for HIGH STAKES, fictional adult legal cannabis business game. Realistic pre-rendered game art, cool neutral light from upper left with subtle violet rim from right. Fixed elevated three-quarter orthographic-like camera about 30 degrees looking down. Clean genuine transparent background, no checkerboard painted in, no floor, no labels, no watermark. Output portrait 1024x1536. Only ONE object, not a sheet. Reference is material/style reference. Render ONLY one charcoal fabric grow pot filled with dark soil. No plant, no stem, no leaves. Wide oval top viewed from above, cylindrical fabric sides and stitched handles. Pot positioned low in canvas centered x512, top soil center at y1382, pot continues down only to y1510. Diameter around 420 pixels, height around 220 pixels. Broad empty transparent space above for separate plant sprite. Do not enlarge to fill canvas. Match reference pot material and lighting. No cast shadow outside pot."
+    },
+    {
+      "id": "plant-garage-og-starter-v001",
+      "ref": "/workspace/scratch/4b89fc0faa61/generated_images/exec-6bcb023d-17b2-46a9-9d0a-2b5160ff1520.png",
+      "alpha": true,
+      "prompt": "Use case: stylized-concept. Production individual 2.5D game sprite for HIGH STAKES, fictional adult legal cannabis business game. Realistic pre-rendered game art, cool neutral light from upper left with subtle violet rim from right. Fixed elevated three-quarter orthographic-like camera about 30 degrees looking down. Clean genuine transparent background, no checkerboard painted in, no floor, no labels, no watermark. Output portrait 1024x1536. Only ONE object, not a sheet. Reference image is species/material style reference only; remove the entire pot and soil. Render ONLY the plant foliage, branches and stem as a transparent sprite. Stem bottom at exactly x512,y1382 in the 1024x1536 canvas, no roots below this point, no soil, no pot, no ground, no root ball. Same root anchor for all growth states. Stage: starter. A tiny seedling with two rounded first leaves and one small serrated leaf pair, height about 180 pixels and width about 150 pixels, positioned near bottom; large transparent space above. Thin short green stem. No flowers."
+    },
+    {
+      "id": "plant-garage-og-young-v001",
+      "ref": "/workspace/scratch/4b89fc0faa61/generated_images/exec-6bcb023d-17b2-46a9-9d0a-2b5160ff1520.png",
+      "alpha": true,
+      "prompt": "Use case: stylized-concept. Production individual 2.5D game sprite for HIGH STAKES, fictional adult legal cannabis business game. Realistic pre-rendered game art, cool neutral light from upper left with subtle violet rim from right. Fixed elevated three-quarter orthographic-like camera about 30 degrees looking down. Clean genuine transparent background, no checkerboard painted in, no floor, no labels, no watermark. Output portrait 1024x1536. Only ONE object, not a sheet. Reference image is species/material style reference only; remove the entire pot and soil. Render ONLY the plant foliage, branches and stem as a transparent sprite. Stem bottom at exactly x512,y1382 in the 1024x1536 canvas, no roots below this point, no soil, no pot, no ground, no root ball. Same root anchor for all growth states. Stage: young. A young vegetative cannabis plant with several small branches, about 450 pixels high and 370 pixels wide, positioned in lower half with plenty of transparent space above. Broad green serrated leaves. No flowers, no buds."
+    },
+    {
+      "id": "plant-garage-og-developed-v001",
+      "ref": "/workspace/scratch/4b89fc0faa61/generated_images/exec-6bcb023d-17b2-46a9-9d0a-2b5160ff1520.png",
+      "alpha": true,
+      "prompt": "Use case: stylized-concept. Production individual 2.5D game sprite for HIGH STAKES, fictional adult legal cannabis business game. Realistic pre-rendered game art, cool neutral light from upper left with subtle violet rim from right. Fixed elevated three-quarter orthographic-like camera about 30 degrees looking down. Clean genuine transparent background, no checkerboard painted in, no floor, no labels, no watermark. Output portrait 1024x1536. Only ONE object, not a sheet. Reference image is species/material style reference only; remove the entire pot and soil. Render ONLY the plant foliage, branches and stem as a transparent sprite. Stem bottom at exactly x512,y1382 in the 1024x1536 canvas, no roots below this point, no soil, no pot, no ground, no root ball. Same root anchor for all growth states. Stage: developed. A developed leafy cannabis bush with broad lush dark-green serrated leaves and visible branching, about 850 pixels high and 650 pixels wide, below top with transparent margin. No large mature flower clusters, foliage dominated."
+    },
+    {
+      "id": "plant-garage-og-ready-v001",
+      "ref": "/workspace/scratch/4b89fc0faa61/generated_images/exec-6bcb023d-17b2-46a9-9d0a-2b5160ff1520.png",
+      "alpha": true,
+      "prompt": "Use case: stylized-concept. Production individual 2.5D game sprite for HIGH STAKES, fictional adult legal cannabis business game. Realistic pre-rendered game art, cool neutral light from upper left with subtle violet rim from right. Fixed elevated three-quarter orthographic-like camera about 30 degrees looking down. Clean genuine transparent background, no checkerboard painted in, no floor, no labels, no watermark. Output portrait 1024x1536. Only ONE object, not a sheet. Reference image is species/material style reference only; remove the entire pot and soil. Render ONLY the plant foliage, branches and stem as a transparent sprite. Stem bottom at exactly x512,y1382 in the 1024x1536 canvas, no roots below this point, no soil, no pot, no ground, no root ball. Same root anchor for all growth states. Stage: ready. A mature compact Garage OG cannabis plant, broad lush green silhouette with natural flower clusters, about 1200 pixels tall and 850 pixels wide, fully contained with transparent margin. Realistic game rendering, understated violet right rim, no oversized surreal buds."
+    }
+  ]
+}

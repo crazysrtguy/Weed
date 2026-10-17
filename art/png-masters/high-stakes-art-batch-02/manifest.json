@@ -1,0 +1,106 @@
+{
+  "batch": "02",
+  "method": "built-in imagegen",
+  "assets": [
+    {
+      "id": "eq-rack-t1-v001",
+      "file": "assets/eq-rack-t1-v001.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "opaque_bounds": [
+        99,
+        25,
+        1195,
+        1239
+      ],
+      "sha256": "947f383ffd2850bc415d1d63959f288dd3053202ebf40c81a2c0a3324fff8a9e",
+      "status": "generated_not_integrated"
+    },
+    {
+      "id": "eq-lamp-t1-v001",
+      "file": "assets/eq-lamp-t1-v001.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "opaque_bounds": [
+        45,
+        50,
+        1223,
+        1053
+      ],
+      "sha256": "6f95a0efded70bf7589e3fd53f2e168d6cf0d02f7fe1d9e02f9ebbeb72d97493",
+      "status": "generated_not_integrated"
+    },
+    {
+      "id": "eq-bench-t1-v001",
+      "file": "assets/eq-bench-t1-v001.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "opaque_bounds": [
+        30,
+        157,
+        1228,
+        1193
+      ],
+      "sha256": "5ddb51acaa3bc7f86e3ff04dc94fa2dbedeed372a02504b83a19148e975e5c37",
+      "status": "generated_not_integrated"
+    },
+    {
+      "id": "eq-storage-t1-v001",
+      "file": "assets/eq-storage-t1-v001.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "opaque_bounds": [
+        120,
+        54,
+        1159,
+        1224
+      ],
+      "sha256": "9ea0a6efbe40a051c6ae727c88da5d4f889b31c20b15bd745b89a3d15b1501c3",
+      "status": "generated_not_integrated"
+    },
+    {
+      "id": "eq-fan-t1-v001",
+      "file": "assets/eq-fan-t1-v001.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "opaque_bounds": [
+        260,
+        5,
+        964,
+        1240
+      ],
+      "sha256": "0e7a6e43e43de818783eea2774bad00bf4e77b70b985881d40acb4c53db3a52a",
+      "status": "generated_not_integrated"
+    }
+  ]
+}

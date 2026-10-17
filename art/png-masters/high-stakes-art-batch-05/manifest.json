@@ -1,0 +1,56 @@
+[
+  {
+    "id": "decor-couch-starter-v001",
+    "file": "assets/decor-couch-starter-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "decor-tool-chest-v001",
+    "file": "assets/decor-tool-chest-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "decor-coffee-station-v001",
+    "file": "assets/decor-coffee-station-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "decor-trophy-cabinet-v001",
+    "file": "assets/decor-trophy-cabinet-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "decor-poster-frame-v001",
+    "file": "assets/decor-poster-frame-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  },
+  {
+    "id": "decor-business-sign-v001",
+    "file": "assets/decor-business-sign-v001.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "status": "generated_not_integrated"
+  }
+]
