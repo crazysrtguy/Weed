@@ -8,6 +8,6 @@ Run `node --test tests/engine.test.mjs`. Eight rule tests cover transaction guar
 
 Art uses existing generated masters, resized as WebP runtime assets. Canvas suppresses faint edge alpha and aligns foliage above a fixed pot. Final edge cleanup and perspective review remain art polish work.
 
-## Strains (placeholders)
+## Strains
 
-`STRAINS` in `engine.mjs` defines 4 strains (name, grow time, seed cost, order value, unlock by lifetime sales). Until real art exists they reuse the Garage OG sprites with a CSS tint. To swap in real art: add `assets/v2/<id>-starter|young|developed|ready.webp` (transparent, same camera angle and pot position) and set `art:true` on that strain. Rename strains by editing `name`. Bryce only buys `tier>=2` jars; order pay scales by the strain `value` of the jars used.
+`STRAINS` in `engine.mjs` defines 4 strains: Garage OG, Midnight Purple, Citrus Riot, Frostbite (name, grow time, seed cost, order value, unlock by lifetime sales). Real art is in `assets/v2/<id>-{starter,young,developed,ready,seed,jar}.webp`; Garage OG reuses the original base sprites for its growth stages. A strain without its own art can set `art:false` plus a CSS `tint` to reuse the OG sprites. Bryce only buys `tier>=2` jars; order pay scales by the `value` of the jars used. The art is still marked as needing alpha-edge cleanup and in-game alignment QA.

@@ -23,3 +23,4 @@ nav button{min-height:48px;padding:6px 4px}nav button span{font-size:19px;margin
 }
 
 .strain{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:#ffffff04}.strain.locked{opacity:.55}.strain-art{width:44px;height:58px;display:flex;align-items:flex-end;justify-content:center;flex:none}.strain-art img{height:56px;width:auto}.strain-info{flex:1;min-width:0}.strain-info b{display:block;font-size:14px}.strain-info small{color:var(--muted);font-size:11px;line-height:1.4;display:block}.strain .primary{padding:8px 12px;min-height:38px;font-size:11px;white-space:nowrap;flex:none}
+.inventory-grid{grid-template-columns:repeat(2,1fr)}

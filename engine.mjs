@@ -1,25 +1,26 @@
 export const VERSION=2,DURATION=90000,STARTER_COST=25;
-// Placeholder strains: rename freely. `art:true` once assets/v2/<id>-{starter,young,developed,ready}.webp exist.
+// `art:true` means assets/v2/<id>-{starter,young,developed,ready,jar,seed}.webp exist (Garage OG reuses the base sprites).
 // `value` multiplies order pay when these jars are used. `unlock` is lifetime sales needed.
 export const STRAINS={
  og:{id:'og',name:'Garage OG',tag:'Fast starter',time:90000,cost:25,jars:12,tier:1,value:1,unlock:0,art:false,tint:''},
- purple:{id:'purple',name:'Purple Placeholder',tag:'Balanced',time:150000,cost:60,jars:12,tier:2,value:1.3,unlock:600,art:false,tint:'hue-rotate(170deg) saturate(1.15)'},
- lemon:{id:'lemon',name:'Lemon Placeholder',tag:'Premium',time:240000,cost:140,jars:12,tier:3,value:1.75,unlock:1800,art:false,tint:'hue-rotate(-40deg) saturate(1.4) brightness(1.12)'},
- gold:{id:'gold',name:'Gold Placeholder',tag:'Rare, slow',time:360000,cost:300,jars:12,tier:4,value:2.4,unlock:4000,art:false,tint:'hue-rotate(-75deg) saturate(1.6) brightness(1.05)'}
+ 'midnight-purple':{id:'midnight-purple',name:'Midnight Purple',tag:'Balanced',time:150000,cost:60,jars:12,tier:2,value:1.3,unlock:600,art:true,tint:''},
+ 'citrus-riot':{id:'citrus-riot',name:'Citrus Riot',tag:'Premium',time:240000,cost:140,jars:12,tier:3,value:1.75,unlock:1800,art:true,tint:''},
+ frostbite:{id:'frostbite',name:'Frostbite',tag:'Rare, slow',time:360000,cost:300,jars:12,tier:4,value:2.4,unlock:4000,art:true,tint:''}
 };
+const ALIAS={purple:'midnight-purple',lemon:'citrus-riot',gold:'frostbite'}; // ids used by the earlier placeholder build
 export const STRAIN_IDS=Object.keys(STRAINS);
 export const OFFERS=[{id:'tony',name:'Tony’s Dispensary',need:8,pay:640,line:'Put a label on it this time. My customers ask questions.'},{id:'bryce',name:'Bryce Botanicals',need:12,pay:1040,minTier:2,line:'It’s not expensive. It’s an elevated brand experience.'},{id:'rick',name:'Cousin Rick',need:4,pay:260,line:'Small order. Big dreams. Terrible parking.'}];
 export const UPGRADES=[{id:'expansion',name:'More grow space',cost:600,art:'storage',description:'Unlock two more pots and install storage shelves.'},{id:'equipment',name:'Better equipment',cost:900,art:'rack',description:'Upgrade production: 15 jars per harvest instead of 12.'},{id:'staff',name:'Hire Marcus',cost:1200,art:'marcus-portrait',description:'Marcus replants every harvested pot for free. You still collect the crops.'}];
 export const SKINS=[{id:'rack',name:'Black & Gold rack',price:150},{id:'lamp',name:'Black & Gold light',price:100},{id:'bench',name:'Black & Gold bench',price:200},{id:'storage',name:'Black & Gold shelves',price:150}];
-export function fresh(now=Date.now()){return{version:2,cash:500,jars:0,sold:0,harvests:0,testCredits:1000,upgrades:{expansion:false,equipment:false,staff:false},slots:[now-DURATION,now-DURATION,now-60000,now-30000,null,null],kinds:['og','og','og','og',null,null],stock:{og:0,purple:0,lemon:0,gold:0},owned:[],equipped:[],sound:false,lastSeen:now};}
+export function fresh(now=Date.now()){return{version:2,cash:500,jars:0,sold:0,harvests:0,testCredits:1000,upgrades:{expansion:false,equipment:false,staff:false},slots:[now-DURATION,now-DURATION,now-60000,now-30000,null,null],kinds:['og','og','og','og',null,null],stock:Object.fromEntries(STRAIN_IDS.map(id=>[id,0])),owned:[],equipped:[],sound:false,lastSeen:now};}
 export function normalize(raw,now=Date.now()){
  const s=fresh(now);if(!raw||typeof raw!=='object')return s;
  for(const k of ['cash','jars','sold','harvests'])if(Number.isFinite(raw[k])&&raw[k]>=0)s[k]=Math.floor(raw[k]);
  for(const k of ['expansion','equipment','staff'])s.upgrades[k]=Boolean(raw.upgrades?.[k]??raw[k]);
  s.slots=Array.from({length:s.upgrades.expansion?8:6},(_,i)=>Number.isFinite(raw.slots?.[i])?Math.max(0,Math.min(now,raw.slots[i])):null);
  if(raw.version===2){s.testCredits=Number.isFinite(raw.testCredits)&&raw.testCredits>=0?Math.floor(raw.testCredits):1000;s.owned=SKINS.filter(x=>raw.owned?.includes(x.id)).map(x=>x.id);s.equipped=s.owned.filter(id=>raw.equipped?.includes(id));}
- s.kinds=s.slots.map((t,i)=>t===null?null:(STRAINS[raw.kinds?.[i]]?raw.kinds[i]:'og'));
- s.stock={og:0};for(const id of STRAIN_IDS){const n=raw.stock?.[id];s.stock[id]=Number.isFinite(n)&&n>0?Math.floor(n):0;}
+ const rk=k=>ALIAS[k]||k;s.kinds=s.slots.map((t,i)=>t===null?null:(STRAINS[rk(raw.kinds?.[i])]?rk(raw.kinds[i]):'og'));
+ s.stock={og:0};for(const id of STRAIN_IDS){const old=Object.keys(ALIAS).find(k=>ALIAS[k]===id);const n=raw.stock?.[id]??raw.stock?.[old];s.stock[id]=Number.isFinite(n)&&n>0?Math.floor(n):0;}
  if(!raw.stock)s.stock.og=s.jars;sync(s);
  s.sound=Boolean(raw.sound);s.lastSeen=Number.isFinite(raw.lastSeen)?raw.lastSeen:now;return s;
 }
