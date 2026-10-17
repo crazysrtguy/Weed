@@ -1,0 +1,19 @@
+{
+  "name": "high-stakes-devnet",
+  "private": true,
+  "type": "module",
+  "description": "Solana DEVNET tooling for High Stakes: test token, faucet, prize payouts, end-to-end test. Devnet only.",
+  "scripts": {
+    "setup": "node setup.mjs",
+    "faucet": "node mint-to.mjs",
+    "payout": "node payout.mjs",
+    "e2e": "node e2e.mjs",
+    "offline": "node offline-test.mjs",
+    "pay": "node pay.mjs"
+  },
+  "dependencies": {
+    "@solana/spl-token": "0.4.9",
+    "@solana/spl-token-metadata": "0.1.6",
+    "@solana/web3.js": "1.98.0"
+  }
+}

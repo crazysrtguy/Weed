@@ -5,3 +5,8 @@ __pycache__/
 .env.*
 node_modules/
 .openai/
+
+# Solana devnet test keys and installs (never commit)
+devnet/.keys/
+devnet/node_modules/
+devnet/.orders.json

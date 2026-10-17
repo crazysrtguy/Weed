@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.devnet.solana.com; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>High Stakes — Devnet Pay Test</title>
+<style>
+:root{color-scheme:dark;--lime:#c7ef83;--muted:#9daab0;--bg:#10191e;--line:#ffffff1a;--gold:#d4b173;--red:#ff7a6b}
+*{box-sizing:border-box}body{margin:0;background:#080e12;color:#edf1e9;font:14px/1.5 system-ui,Segoe UI,sans-serif}
+main{max-width:720px;margin:auto;padding:20px 16px 60px}h1{font-size:26px;margin:6px 0 2px;letter-spacing:1px}h1 span{color:var(--lime)}
+.warn{border:1px solid #d4b17355;background:#d4b17310;border-radius:10px;padding:10px 14px;color:#e9d4a8;margin:12px 0}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}.card h2{margin:0 0 10px;font-size:13px;letter-spacing:2px;color:var(--lime);text-transform:uppercase}
+.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.row span{color:var(--muted)}.row b{font-variant-numeric:tabular-nums;word-break:break-all;text-align:right}
+button{font:inherit;border:0;border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer;background:var(--lime);color:#182511}button.alt{background:#ffffff12;color:#edf1e9}button:disabled{opacity:.4;cursor:default}
+select{font:inherit;background:#ffffff0d;color:#edf1e9;border:1px solid var(--line);border-radius:8px;padding:9px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+code{display:block;background:#ffffff12;padding:8px 10px;border-radius:7px;word-break:break-all;margin:6px 0}a{color:var(--lime)}
+#status{font-weight:700;margin:10px 0 0}.ok{color:var(--lime)}.bad{color:var(--red)}.wait{color:var(--gold)}
+#log{font:12px/1.6 ui-monospace,Consolas,monospace;white-space:pre-wrap;word-break:break-all;color:#cfe3c0;max-height:200px;overflow:auto}
+</style></head><body><main>
+<h1>HIGH STAKES <span>· DEVNET PAY TEST</span></h1>
+<div class="warn"><b>Test network only.</b> Nothing here has real value. There is <b>no wallet connection</b> on this page: you pay by sending from your own wallet app, and the page only reads the blockchain to see that your payment arrived.</div>
+
+<div class="card"><h2>Treasury (where payments go)</h2>
+<div class="row"><span>SOL address</span><b id="tOwner">…</b></div>
+<div class="row"><span>Game token</span><b id="mint">…</b></div>
+<div class="row"><span>Network</span><b id="cluster">…</b></div></div>
+
+<div class="card"><h2>1 · Choose</h2><div class="controls">
+<select id="item"></select><select id="coin"><option value="sol">Pay with SOL</option><option value="token">Pay with game token</option></select>
+<button id="create">Create order</button></div></div>
+
+<div class="card" id="orderCard" hidden><h2>2 · Send exactly this</h2>
+<div class="row"><span>Amount</span><b id="oAmount"></b></div>
+<div class="row"><span>Send to</span><b id="oTo"></b></div>
+<div class="row"><span>Order code (reference)</span><b id="oRef"></b></div>
+<p><a id="payLink" href="#">Open in my wallet app (Solana Pay link)</a></p>
+<code id="payUrl"></code>
+<p style="color:var(--muted)">Using a wallet app on this device, tap the link. Otherwise copy the link into a wallet that supports Solana Pay (it adds the order code for you). <b>Always check the address matches the treasury above.</b> A plain send without the order code cannot be matched to your order.</p>
+<div id="status" class="wait">Waiting for payment…</div>
+<p><button id="check" class="alt">Check now</button></p></div>
+
+<div class="card"><h2>Log</h2><div id="log">Ready.</div></div>
+</main>
+<script type="module" src="devnet-page.mjs"></script>
+</body></html>
