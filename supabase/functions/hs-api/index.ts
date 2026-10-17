@@ -40,7 +40,9 @@ Deno.serve(async(req)=>{
  const{data:{user}}=await db.auth.getUser(token);
  if(!user)return json(401,{error:'auth',message:'Sign in first.'});
  try{
-  const body=await req.json();
+  const raw=await req.text();
+  if(raw.length>100000)return json(413,{error:'big',message:'Request too large.'});
+  const body=JSON.parse(raw);
   const r=await handle({store,uid:user.id,now:Date.now(),body,pay});
   return json(r.status,r.body);
  }catch(e){console.error(e);return json(500,{error:'server',message:'Something went wrong.'});}

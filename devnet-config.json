@@ -19,5 +19,6 @@
     "bench": 0.07,
     "storage": 0.05
   },
-  "linkSol": 0.001
+  "linkSol": 0.001,
+  "payoutWallet": "6vGH7fMhGN1HafPvEgnkXwWwjCnUL9fREp1b5rU1h8ab"
 }

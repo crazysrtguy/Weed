@@ -5,6 +5,7 @@ export const PAY_CONFIG={
  "decimals": 6,
  "mint": "C8ubGCMojFyrQ7qCR2iDDzsPRu9XnfAjDStZiJoXgvEd",
  "treasuryOwner": "Cpwe9TrAWuCSSvyYgqHfLnSCnRiM6eGjmUL2zAZq9X42",
+ "payoutWallet": "6vGH7fMhGN1HafPvEgnkXwWwjCnUL9fREp1b5rU1h8ab",
  "items": {
   "rack": {
    "token": 150,
