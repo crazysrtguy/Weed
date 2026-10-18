@@ -4,6 +4,8 @@ import {cloudCard,bindCloud,leaguePanel,bindLeague,handleConnect,choose} from '.
 import {profilePanel,startProfile} from './profile.mjs';
 import {payCard,bindPay} from './pay-ui.mjs';
 import {ART,sprite,plantArt,burst,loadArt,renderProps,renderSlots,updateSlots,setPreview} from './scene.mjs';
+// Each incident has its own face (presentation only; the rules in engine.mjs are unchanged).
+const EVENT_ART={fan:'portrait-dale',inspection:'portrait-landlord',friend:'portrait-kyle',contest:'portrait-vince',celebrity:'portrait-influencer'};
 const $=s=>document.querySelector(s),money=n=>'$'+n.toLocaleString(),KEY='high-stakes-garage-v2';
 let state,tab='room',zoom=innerWidth<600?.7:.95,modalSlot=null,toastTimer,preview=null,storageAvailable=true;
 try{const raw=JSON.parse(localStorage.getItem(KEY)??localStorage.getItem('high-stakes-garage-v1')??'null');state=E.normalize(raw);}catch{state=E.fresh();storageAvailable=false;}
@@ -38,7 +40,7 @@ function delivered(id,r){const o=E.OFFERS.find(x=>x.id===id);save();render();sou
 openModal(modalHead('ORDER COMPLETE',o.name)+`<div class="delivered"><img class="portrait-lg" src="${ART+id}-happy.webp" alt="${o.name} is happy"><img class="carton" src="${ART}carton.webp" alt="Carton of jars"></div><p class="quote">“${o.thanks}”</p><div class="stat"><span>Paid</span><b>${money(r.pay)}</b></div><button class="primary" id="deliveredOk">Nice</button>`);$('#deliveredOk').onclick=closeModal;}
 let shownEvent=0;
 function showEvent(){const ev=E.EVENTS.find(x=>x.id===state.event?.id);if(!ev)return;shownEvent=state.event.at;
-openModal(modalHead('INCIDENT',ev.title)+`${ev.art?`<img class="portrait" src="${ART+ev.art}.webp" alt="" style="margin:4px 0 10px">`:''}<p>${ev.body}</p>`+ev.options.map((o,i)=>`<button class="${i?'secondary':'primary'} ev-opt" data-ev="${o.id}" ${E.optionOk(state,o)?'':'disabled'}>${o.label}</button><p class="dialog-notice" style="margin:6px 0 14px">${o.hint}</p>`).join(''));
+openModal(modalHead('INCIDENT',ev.title)+`${EVENT_ART[ev.id]||ev.art?`<img class="portrait" src="${ART+(EVENT_ART[ev.id]||ev.art)}.webp" alt="" style="margin:4px 0 10px">`:''}<p>${ev.body}</p>`+ev.options.map((o,i)=>`<button class="${i?'secondary':'primary'} ev-opt" data-ev="${o.id}" ${E.optionOk(state,o)?'':'disabled'}>${o.label}</button><p class="dialog-notice" style="margin:6px 0 14px">${o.hint}</p>`).join(''));
 document.querySelectorAll('[data-ev]').forEach(b=>b.onclick=()=>{const r=Q('event',[b.dataset.ev],E.resolveEvent(state,b.dataset.ev));closeModal();doAction(r);});}
 function head(k,title,copy){return`<div class="panel-head"><span class="eyebrow">${k}</span><h2>${title}</h2><p>${copy}</p></div>`;}
 function inventory(){E.sync(state);openModal(modalHead('YOUR STOCK','Inventory')+`<div class="inventory-grid">`+E.STRAIN_IDS.map(id=>`<div class="inventory-item"><img src="${ART}${id}-jar.webp" alt="${E.STRAINS[id].name} jar"><b>${state.stock[id]||0} jars</b><small>${E.STRAINS[id].name}</small></div>`).join('')+`</div><p>${state.jars} jars total. Premium strains fill more orders and pay more. Quantity changes when you harvest or complete a buyer’s order.</p><button id="inventoryOrders" class="primary">Open buyer orders ↗</button>`);$('#inventoryOrders').onclick=()=>{closeModal();switchTab('orders');};}

@@ -80,7 +80,7 @@ header{height:60px;padding:0 28px}.brand{font-size:24px}.brandmark{font-size:34p
 .field{display:grid;gap:6px;margin:10px 0}.field small{color:var(--muted)}.field input{min-height:42px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:#0b1317;color:inherit;font:inherit;width:100%}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.chip{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:#0b1317}.chip.on{border-color:var(--lime);color:var(--lime)}
 .board{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}.board li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:#ffffff08}.board li.me{outline:1px solid var(--lime)}
-.board .rk{width:22px;color:var(--muted);text-align:right}.board .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.board button{min-height:34px;padding:0 10px}
+.board .rk{width:26px;color:var(--muted);text-align:right}.board .rank-medal{width:24px;height:24px;vertical-align:middle}.board .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.board button{min-height:34px;padding:0 10px}
 nav button{min-width:0;font-size:11px}
 
 .grower-big{display:block;width:150px;height:150px;border-radius:50%;object-fit:cover;object-position:center 22%;border:2px solid #c7ef8366;background:#263039;margin:8px 0 12px}
