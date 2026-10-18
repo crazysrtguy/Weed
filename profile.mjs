@@ -25,7 +25,7 @@ export const MILESTONES=[
   {id:'room',title:'Room to grow',copy:'Unlock the extra plant slots',art:'badge-wrench-gear',done:s=>Boolean(s.upgrades.expansion)},
   {id:'staff',title:'Someone else’s problem',copy:'Hire Marcus for replanting',glyph:'✦',done:s=>Boolean(s.upgrades.staff)},
   {id:'taste',title:'Personal taste',copy:'Own your first cosmetic skin',glyph:'◈',done:s=>s.owned.length>0},
-  {id:'collector',title:'Collector',copy:'Unlock all four strains',art:'badge-collector',done:s=>E.STRAIN_IDS.every(id=>E.isUnlocked(s,id))},
+  {id:'collector',title:'Collector',copy:'Unlock every strain',art:'badge-collector',done:s=>E.STRAIN_IDS.every(id=>E.isUnlocked(s,id))},
   {id:'empire',title:'Empire',copy:'Reach $10,000 in lifetime sales',art:'badge-crowned-leaf',done:s=>s.sold>=10000},
   {id:'champion',title:'League champion',copy:'Win a weekly league (coming soon)',art:'trophy-leaf',done:()=>false}
 ];

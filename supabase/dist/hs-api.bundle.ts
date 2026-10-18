@@ -161,7 +161,9 @@ const STRAINS={
 og:{id:'og',name:'Garage OG',tag:'Fast starter',time:90000,cost:25,jars:12,tier:1,value:1,unlock:0,art:false,tint:''},
 'midnight-purple':{id:'midnight-purple',name:'Midnight Purple',tag:'Balanced',time:150000,cost:60,jars:12,tier:2,value:1.3,unlock:600,art:true,tint:''},
 'citrus-riot':{id:'citrus-riot',name:'Citrus Riot',tag:'Premium',time:240000,cost:140,jars:12,tier:3,value:1.75,unlock:1800,art:true,tint:''},
-frostbite:{id:'frostbite',name:'Frostbite',tag:'Rare, slow',time:360000,cost:300,jars:12,tier:4,value:2.4,unlock:4000,art:true,tint:''}
+frostbite:{id:'frostbite',name:'Frostbite',tag:'Rare, slow',time:360000,cost:300,jars:12,tier:4,value:2.4,unlock:4000,art:true,tint:''},
+'margin-call':{id:'margin-call',name:'Margin Call',tag:'Elite, slow',time:540000,cost:520,jars:12,tier:5,value:3.4,unlock:8000,art:true,tint:''},
+'whale-breath':{id:'whale-breath',name:'Whale Breath',tag:'Whale-tier',time:720000,cost:900,jars:12,tier:6,value:4.6,unlock:15000,art:true,tint:''}
 };
 const ALIAS={purple:'midnight-purple',lemon:'citrus-riot',gold:'frostbite'}; // ids used by the earlier placeholder build
 const STRAIN_IDS=Object.keys(STRAINS);

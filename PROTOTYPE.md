@@ -10,7 +10,7 @@ Art uses existing generated masters, resized as WebP runtime assets. Canvas supp
 
 ## Strains
 
-`STRAINS` in `engine.mjs` defines 4 strains: Garage OG, Midnight Purple, Citrus Riot, Frostbite (name, grow time, seed cost, order value, unlock by lifetime sales). Real art is in `assets/v2/<id>-{starter,young,developed,ready,seed,jar}.webp`; Garage OG reuses the original base sprites for its growth stages. A strain without its own art can set `art:false` plus a CSS `tint` to reuse the OG sprites. Bryce only buys `tier>=2` jars; order pay scales by the `value` of the jars used. The art is still marked as needing alpha-edge cleanup and in-game alignment QA.
+`STRAINS` in `engine.mjs` defines 6 strains: Garage OG, Midnight Purple, Citrus Riot, Frostbite, Margin Call, Whale Breath (name, grow time, seed cost, order value, unlock by lifetime sales). Real art is in `assets/v2/<id>-{starter,young,developed,ready,seed,jar}.webp`; Garage OG reuses the original base sprites for its growth stages. A strain without its own art can set `art:false` plus a CSS `tint` to reuse the OG sprites. Bryce only buys `tier>=2` jars; order pay scales by the `value` of the jars used. The art is still marked as needing alpha-edge cleanup and in-game alignment QA.
 
 ## Upgrades and staged art (tier-2 batch)
 

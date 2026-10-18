@@ -12,7 +12,9 @@ test('milestones unlock from real progress only, and the league badge stays lock
   s.harvests=10;s.upgrades.expansion=true;s.upgrades.staff=true;s.owned=['rack'];
   assert.ok(['payday','thumb','room','staff','taste'].every(id=>milestonesDone(s).some(m=>m.id===id)));
   s.sold=10000;
-  assert.ok(milestonesDone(s).some(m=>m.id==='collector')&&milestonesDone(s).some(m=>m.id==='empire'));
+  assert.ok(milestonesDone(s).some(m=>m.id==='empire')&&!milestonesDone(s).some(m=>m.id==='collector'),'the last strain unlocks later');
+  s.sold=15000;
+  assert.ok(milestonesDone(s).some(m=>m.id==='collector'));
   assert.ok(!milestonesDone(s).some(m=>m.id==='champion'));
 });
 test('decor unlocks in order with lifetime sales and never from game cash',()=>{
