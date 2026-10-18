@@ -5,7 +5,7 @@
 import {createClient} from 'npm:@supabase/supabase-js@2';
 import * as web3 from 'npm:@solana/web3.js@1.98.0';
 import * as spl from 'npm:@solana/spl-token@0.4.9';
-import {runPayouts} from '../_shared/payout-core.mjs';
+import {runPayouts,runHealth} from '../_shared/payout-core.mjs';
 import {makeChain} from '../_shared/payout-chain.mjs';
 import * as chainLib from '../_shared/chain.mjs';
 import {PAY_CONFIG} from '../_shared/pay-config.mjs';
@@ -29,11 +29,20 @@ const db={
  release:async(id:string)=>{const r=await ok(sb.from('hs_payouts').select('attempts').eq('id',id).single());
   await ok(sb.from('hs_payouts').update({status:'due',attempts:Math.max(0,r.attempts-1)}).eq('id',id).eq('status','claimed'));},
  fail:async(id:string,why:string)=>{await ok(sb.from('hs_payouts').update({status:'failed',error:why}).eq('id',id));},
+ stats:async()=>await ok(sb.rpc('hs_payout_stats')),
+ saveHealth:async(d:any)=>{await ok(sb.from('hs_health').upsert({name:'payout',data:d,updated_at:iso()}));},
+ alertGate:async(kind:string,mins:number)=>(await ok(sb.rpc('hs_alert_gate',{p_kind:kind,p_minutes:mins})))===true,
  spentLast24h:async()=>{
   const since=new Date(Date.now()-864e5).toISOString();
   const paid=await ok(sb.from('hs_payouts').select('amount_raw').eq('status','paid').gte('paid_at',since));
   const inflight=await ok(sb.from('hs_payouts').select('amount_raw').eq('status','sending'));
   return[...paid,...inflight].reduce((n:number,r:any)=>n+Number(r.amount_raw),0);}
+};
+
+// Alerts go to an optional webhook (Discord or Slack style). With no webhook they are only written to the function logs.
+const notify=async(text:string)=>{
+ const url=Deno.env.get('HS_ALERT_WEBHOOK');console.error('ALERT',text);
+ if(url&&url.startsWith('https://'))await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({content:text,text})});
 };
 
 Deno.serve(async(req)=>{
@@ -44,6 +53,8 @@ Deno.serve(async(req)=>{
   if(!Array.isArray(key)||key.length!==64)return out(503,{error:'payouts not configured'});
   const chain=makeChain({web3,spl,rpcUrl:chainLib.assertDevnet(Deno.env.get('HS_RPC')||chainLib.DEVNET_RPC),hotSecret:key,mint:PAY_CONFIG.mint,expectedWallet:PAY_CONFIG.payoutWallet,decimals:PAY_CONFIG.decimals});
   const r=await runPayouts({db,chain,log:(...a:any[])=>console.log(...a)});
-  return out(200,r);
+  let health:any=null;
+  try{health=await runHealth({db,chain,notify});}catch(e){console.error('health check failed',(e as Error).message);}
+  return out(200,{...r,problems:health?.problems??null});
  }catch(e){console.error('payout error',(e as Error).message);return out(500,{error:'payout run failed'});}
 });

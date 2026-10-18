@@ -6,9 +6,10 @@ import {solanaPayUrl,formatAmount} from './chain.mjs';
 const esc=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const NAMES={rack:'Display rack',lamp:'Neon grow lamp',bench:'Trim bench',storage:'Storage crate',link:'Payout wallet link'};
 const nameOf=(id)=>NAMES[id]||id;
-let data=null,active=null,timer=null;
+let data=null,active=null,timer=null,lastHtml='';
 
-export const payCard=()=>C.enabled()?`<article class="card" id="payBox"><span class="tag">Premium shop · DEVNET TEST</span><p>Loading…</p></article>`:'';
+// The card re-renders whenever the cloud status changes; show the last good content at once so the buttons never blink away.
+export const payCard=()=>C.enabled()?`<article class="card" id="payBox">${lastHtml||'<span class="tag">Premium shop · DEVNET TEST</span><p>Loading…</p>'}</article>`:'';
 
 const orderBox=(o)=>{
  const amt=formatAmount(o.amountRaw,o.decimals),sym=o.method==='sol'?'SOL':(data?.symbol||'TOKEN');
@@ -28,6 +29,7 @@ function view(){
   +Object.keys(cat).map(id=>owned.has(id)?`<div class="stat"><span>${esc(nameOf(id))}</span><b>Owned ✓</b></div>`:
    `<div class="stat"><span>${esc(nameOf(id))}</span><span>${cat[id].sol?`<button class="secondary" data-buy="${esc(id)}|sol">${cat[id].sol} SOL</button>`:''} ${cat[id].token?`<button class="secondary" data-buy="${esc(id)}|token">${cat[id].token} ${esc(data.symbol)}</button>`:''}</span></div>`).join('')
   +`<div id="payOrder">${active?orderBox(active):''}</div>`;
+ lastHtml=box.innerHTML;
  box.querySelectorAll('[data-buy]').forEach(b=>b.onclick=async()=>{const[item,method]=b.dataset.buy.split('|');b.disabled=true;try{active=(await C.orderCreate(item,method)).order;view();poll(true);}catch(e){note(e.message);}b.disabled=false;});
  box.querySelectorAll('[data-copy]').forEach(c=>c.onclick=()=>{try{navigator.clipboard.writeText(c.dataset.copy);note('Copied.');}catch{}});
  const chk=box.querySelector('#payCheck');if(chk)chk.onclick=()=>poll(true);
@@ -50,4 +52,4 @@ async function load(){
  try{data=await C.orders();const open=data.orders.find(o=>o.status==='pending'&&o.expiresAt>Date.now());active=open||null;view();if(active)poll(true);}
  catch(e){const b=document.querySelector('#payBox');if(b)b.innerHTML=`<span class="tag">Premium shop</span><p>${esc(e.message)}</p>`;}
 }
-export function bindPay(){clearTimeout(timer);if(document.querySelector('#payBox'))load();}
+export function bindPay(){clearTimeout(timer);if(!document.querySelector('#payBox'))return;if(data)view();load();}

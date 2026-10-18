@@ -26,12 +26,21 @@
 - A payout stuck in `failed` needs a human look (wrong wallet, empty pool). The pool being empty shows as repeated attempts then `failed`.
 - Manual override still exists: `devnet/payout.mjs` (dry run, caps, ledger). Do not run both for the same prize id.
 
+## Health checks and alerts
+
+Every run, `hs-payout` also checks the hot wallet and the ledger and stores a snapshot in `hs_health`. It raises an alert (at most once an hour per kind) when: a payout has **failed**, the oldest unpaid prize has waited over **30 minutes**, the **prize pool** holds less than what is owed plus 1,000 tokens, or the hot wallet has under 0.02 **SOL** for fees. Alerts go to the function logs and, if you add the optional secret `HS_ALERT_WEBHOOK` (a Discord or Slack incoming-webhook URL), to that channel. View the snapshot: `select data from hs_health where name='payout';`
+
+## Weekly top-up (devnet)
+
+`cd devnet && node fund-hot.mjs --tokens 6000 --sol 0.3` (dry run) then add `--send`. It only tops the hot wallet up to the target, so running it twice is harmless. On mainnet the treasury is a multisig, so this becomes a proposal the signers approve.
+
 ## One-time setup (done by the project owner in the Supabase dashboard)
 
 1. Deploy `supabase/dist/hs-api.bundle.ts` to the `hs-api` function (adds a 100 KB body limit and the payout wallet config).
 2. Create function `hs-payout`, paste `supabase/dist/hs-payout.bundle.ts`, deploy, and turn **off** "Verify JWT with legacy secret".
 3. Edge Functions > Secrets: add `HS_PAYOUT_KEY` = the contents of `devnet/.keys/hot-payout.json` (a list of 64 numbers).
-4. Migrations `0004_payouts.sql` and `0005_cron.sql` (already applied).
+4. Migrations `0004_payouts.sql`, `0005_cron.sql` and `0006_health.sql`.
+5. Optional: secret `HS_ALERT_WEBHOOK` for alerts.
 
 ## Not covered yet (mainnet blockers)
 

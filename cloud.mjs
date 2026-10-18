@@ -4,7 +4,7 @@
 import {CONFIG} from './cloud-config.mjs';
 import * as L from './league.mjs';
 
-const FLAG='high-stakes-cloud-v1',SDK='https://esm.sh/@supabase/supabase-js@2.45.4';
+const FLAG='high-stakes-cloud-v1',SDK='./vendor/supabase-js-2.45.4.mjs';
 export const configured=()=>Boolean(CONFIG.url&&CONFIG.anonKey);
 const store={get(){try{return localStorage.getItem(FLAG);}catch{return null;}},set(v){try{v?localStorage.setItem(FLAG,v):localStorage.removeItem(FLAG);}catch{}}};
 export const enabled=()=>configured()&&store.get()==='1';

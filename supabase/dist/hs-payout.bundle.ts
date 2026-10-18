@@ -182,7 +182,20 @@ while(now()<end){const st=await chain.status(prep.signature);if(st==='finalized'
 }
 return out;
 }
-return {LIMITS,runPayouts};})();
+const HEALTH={cushionRaw:1_000_000_000,minLamports:20_000_000,stuckMinutes:30,alertEveryMin:60};
+const tok=(raw)=>(Number(raw)/1e6).toLocaleString('en-US',{maximumFractionDigits:2});
+async function runHealth({db,chain,notify,h=HEALTH,now=()=>new Date().toISOString()}){
+const s=await db.stats(),b=await chain.balances(),problems=[];
+if(s.failed_count>0)problems.push(['failed',`${s.failed_count} prize payout(s) FAILED and need a human look (select * from hs_payouts where status='failed').`]);
+if(s.oldest_due_min!=null&&s.oldest_due_min>h.stuckMinutes)problems.push(['stuck',`The oldest unpaid prize has been waiting ${s.oldest_due_min} minutes.`]);
+if(b.tokenRaw<Number(s.owed_raw)+h.cushionRaw)problems.push(['pool_low',`Prize pool is low: hot wallet holds ${tok(b.tokenRaw)} tokens, ${tok(s.owed_raw)} owed (keep at least ${tok(h.cushionRaw)} extra). Top it up.`]);
+if(b.lamports<h.minLamports)problems.push(['fees_low',`Hot wallet fee balance is low: ${(b.lamports/1e9).toFixed(4)} SOL.`]);
+await db.saveHealth({...s,tokenRaw:b.tokenRaw,lamports:b.lamports,problems:problems.map(p=>p[0]),at:now()});
+const sent=[];
+for(const [kind,msg] of problems){if(await db.alertGate(kind,h.alertEveryMin)){try{await notify(`[High Stakes] ${msg}`);sent.push(kind);}catch{}}}
+return{problems:problems.map(p=>p[0]),alerted:sent};
+}
+return {HEALTH,LIMITS,runHealth,runPayouts};})();
 const {runPayouts}=coreNs;
 const pchainNs=(()=>{const {assertDevnet,base58}=chainLib;
 function makeChain({web3,spl,rpcUrl,hotSecret,mint,expectedWallet,decimals}){
@@ -211,6 +224,12 @@ async status(sig){
 const r=await conn.getSignatureStatuses([sig],{searchTransactionHistory:true}),s=r.value[0];
 if(!s)return null;if(s.err)return'failed';return s.confirmationStatus==='finalized'?'finalized':'pending';
 },
+/** Hot wallet balances: SOL (fees) and prize tokens. A missing token account counts as 0. */
+async balances(){
+const lamports=await conn.getBalance(hot.publicKey,'confirmed');let tokenRaw=0;
+try{tokenRaw=Number((await conn.getTokenAccountBalance(srcAta,'confirmed')).value.amount);}catch{}
+return{lamports,tokenRaw};
+},
 async expired(lastValidHeight){return(await conn.getBlockHeight('finalized'))>Number(lastValidHeight);}
 };
 }
@@ -233,11 +252,18 @@ if(!d||d.length!==1)throw new Error('could not record signature; not sending');}
 release:async(id:string)=>{const r=await ok(sb.from('hs_payouts').select('attempts').eq('id',id).single());
 await ok(sb.from('hs_payouts').update({status:'due',attempts:Math.max(0,r.attempts-1)}).eq('id',id).eq('status','claimed'));},
 fail:async(id:string,why:string)=>{await ok(sb.from('hs_payouts').update({status:'failed',error:why}).eq('id',id));},
+stats:async()=>await ok(sb.rpc('hs_payout_stats')),
+saveHealth:async(d:any)=>{await ok(sb.from('hs_health').upsert({name:'payout',data:d,updated_at:iso()}));},
+alertGate:async(kind:string,mins:number)=>(await ok(sb.rpc('hs_alert_gate',{p_kind:kind,p_minutes:mins})))===true,
 spentLast24h:async()=>{
 const since=new Date(Date.now()-864e5).toISOString();
 const paid=await ok(sb.from('hs_payouts').select('amount_raw').eq('status','paid').gte('paid_at',since));
 const inflight=await ok(sb.from('hs_payouts').select('amount_raw').eq('status','sending'));
 return[...paid,...inflight].reduce((n:number,r:any)=>n+Number(r.amount_raw),0);}
+};
+const notify=async(text:string)=>{
+const url=Deno.env.get('HS_ALERT_WEBHOOK');console.error('ALERT',text);
+if(url&&url.startsWith('https://'))await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({content:text,text})});
 };
 Deno.serve(async(req)=>{
 const out=(status:number,body:any)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json'}});
@@ -247,6 +273,8 @@ const key=JSON.parse(Deno.env.get('HS_PAYOUT_KEY')||'null');
 if(!Array.isArray(key)||key.length!==64)return out(503,{error:'payouts not configured'});
 const chain=makeChain({web3,spl,rpcUrl:chainLib.assertDevnet(Deno.env.get('HS_RPC')||chainLib.DEVNET_RPC),hotSecret:key,mint:PAY_CONFIG.mint,expectedWallet:PAY_CONFIG.payoutWallet,decimals:PAY_CONFIG.decimals});
 const r=await runPayouts({db,chain,log:(...a:any[])=>console.log(...a)});
-return out(200,r);
+let health:any=null;
+try{health=await runHealth({db,chain,notify});}catch(e){console.error('health check failed',(e as Error).message);}
+return out(200,{...r,problems:health?.problems??null});
 }catch(e){console.error('payout error',(e as Error).message);return out(500,{error:'payout run failed'});}
 });

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {runPayouts,LIMITS} from '../payout-core.mjs';
+import {runPayouts,runHealth,LIMITS,HEALTH} from '../payout-core.mjs';
 
 const MIL=1_000_000,fast={...LIMITS,finalizeWaitMs:30};
 const nosleep=async()=>{};
@@ -84,4 +84,39 @@ test('a payout that keeps failing stops after max attempts instead of looping fo
 test('a prepare error never leaves a row stuck or sends anything',async()=>{
  const db=mem([{id:'a',amount_raw:MIL}]),ch=fakeChain();ch.prepare=async()=>{throw new Error('rpc');};
  await run(db,ch);assert.equal(db.t.get('a').status,'due');assert.equal(ch.sent.length,0);
+});
+
+function healthEnv({stats,bal}){
+ const sent=[],gates=new Map(),saved=[];
+ return{sent,saved,
+  db:{async stats(){return stats;},async saveHealth(d){saved.push(d);},async alertGate(k){if(gates.get(k))return false;gates.set(k,true);return true;}},
+  chain:{async balances(){return bal;}},
+  notify:async t=>{sent.push(t);}};
+}
+const OK_STATS={failed_count:0,due_count:0,oldest_due_min:null,owed_raw:0};
+
+test('health: a funded pool and no failures raises no alerts but is recorded',async()=>{
+ const e=healthEnv({stats:OK_STATS,bal:{tokenRaw:5000*MIL,lamports:100_000_000}});
+ const r=await runHealth(e);assert.deepEqual(r.problems,[]);assert.equal(e.sent.length,0);assert.equal(e.saved.length,1);
+});
+
+test('health: low pool, low fees, failed and stuck payouts each alert, once per window',async()=>{
+ const e=healthEnv({stats:{failed_count:2,due_count:3,oldest_due_min:45,owed_raw:900*MIL},bal:{tokenRaw:1000*MIL,lamports:1_000_000}});
+ let r=await runHealth(e);
+ assert.deepEqual(r.problems.sort(),['failed','fees_low','pool_low','stuck']);assert.equal(e.sent.length,4);
+ assert.ok(e.sent.every(m=>m.startsWith('[High Stakes]')));
+ r=await runHealth(e);assert.equal(e.sent.length,4,'no repeat alerts inside the window');
+});
+
+test('health: the pool must cover what is owed PLUS a cushion',async()=>{
+ const low=healthEnv({stats:{...OK_STATS,owed_raw:1000*MIL},bal:{tokenRaw:1500*MIL,lamports:100_000_000}});
+ assert.deepEqual((await runHealth(low)).problems,['pool_low']);
+ const fine=healthEnv({stats:{...OK_STATS,owed_raw:1000*MIL},bal:{tokenRaw:2001*MIL,lamports:100_000_000}});
+ assert.deepEqual((await runHealth(fine)).problems,[]);
+ assert.equal(HEALTH.cushionRaw,1000*MIL);
+});
+
+test('health: a webhook failure never throws',async()=>{
+ const e=healthEnv({stats:{...OK_STATS,failed_count:1},bal:{tokenRaw:5000*MIL,lamports:100_000_000}});e.notify=async()=>{throw new Error('webhook down');};
+ const r=await runHealth(e);assert.deepEqual(r.problems,['failed']);assert.deepEqual(r.alerted,[]);
 });

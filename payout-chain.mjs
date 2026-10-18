@@ -29,6 +29,12 @@ export function makeChain({web3,spl,rpcUrl,hotSecret,mint,expectedWallet,decimal
       const r=await conn.getSignatureStatuses([sig],{searchTransactionHistory:true}),s=r.value[0];
       if(!s)return null;if(s.err)return'failed';return s.confirmationStatus==='finalized'?'finalized':'pending';
     },
+    /** Hot wallet balances: SOL (fees) and prize tokens. A missing token account counts as 0. */
+    async balances(){
+      const lamports=await conn.getBalance(hot.publicKey,'confirmed');let tokenRaw=0;
+      try{tokenRaw=Number((await conn.getTokenAccountBalance(srcAta,'confirmed')).value.amount);}catch{}
+      return{lamports,tokenRaw};
+    },
     async expired(lastValidHeight){return(await conn.getBlockHeight('finalized'))>Number(lastValidHeight);}
   };
 }

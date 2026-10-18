@@ -38,3 +38,18 @@ export async function runPayouts({db,chain,limits=LIMITS,log=()=>{},sleep=(ms)=>
   }
   return out;
 }
+
+// ---------- Health: is the prize pool funded, are payouts stuck or failing? Never allowed to break a payout run. ----------
+export const HEALTH={cushionRaw:1_000_000_000,minLamports:20_000_000,stuckMinutes:30,alertEveryMin:60};
+const tok=(raw)=>(Number(raw)/1e6).toLocaleString('en-US',{maximumFractionDigits:2});
+export async function runHealth({db,chain,notify,h=HEALTH,now=()=>new Date().toISOString()}){
+  const s=await db.stats(),b=await chain.balances(),problems=[];
+  if(s.failed_count>0)problems.push(['failed',`${s.failed_count} prize payout(s) FAILED and need a human look (select * from hs_payouts where status='failed').`]);
+  if(s.oldest_due_min!=null&&s.oldest_due_min>h.stuckMinutes)problems.push(['stuck',`The oldest unpaid prize has been waiting ${s.oldest_due_min} minutes.`]);
+  if(b.tokenRaw<Number(s.owed_raw)+h.cushionRaw)problems.push(['pool_low',`Prize pool is low: hot wallet holds ${tok(b.tokenRaw)} tokens, ${tok(s.owed_raw)} owed (keep at least ${tok(h.cushionRaw)} extra). Top it up.`]);
+  if(b.lamports<h.minLamports)problems.push(['fees_low',`Hot wallet fee balance is low: ${(b.lamports/1e9).toFixed(4)} SOL.`]);
+  await db.saveHealth({...s,tokenRaw:b.tokenRaw,lamports:b.lamports,problems:problems.map(p=>p[0]),at:now()});
+  const sent=[];
+  for(const [kind,msg] of problems){if(await db.alertGate(kind,h.alertEveryMin)){try{await notify(`[High Stakes] ${msg}`);sent.push(kind);}catch{}}}
+  return{problems:problems.map(p=>p[0]),alerted:sent};
+}
