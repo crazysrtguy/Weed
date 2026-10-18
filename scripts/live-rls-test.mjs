@@ -12,7 +12,7 @@ const A=await signUp(),B=await signUp();
 await api(A.token,{op:'import',state:{version:2,cash:500,jars:0,sold:0,harvests:0}});
 const order=(await api(A.token,{op:'orderCreate',item:'rack',method:'sol'})).body.order;
 
-const TABLES=['hs_saves','hs_profiles','hs_weekly_scores','hs_orders','hs_items','hs_wallets','hs_payouts','hs_locks'];
+const TABLES=['hs_saves','hs_profiles','hs_weekly_scores','hs_orders','hs_items','hs_wallets','hs_payouts','hs_locks','hs_health','hs_alerts'];
 // 1) Direct writes by a signed-in player are refused on EVERY table
 for(const t of TABLES){
   const fake={user_id:B.id,id:'x',name:'x',state:{},item:'rack',method:'sol',amount_raw:1,reference:'r',expires_at:new Date().toISOString(),wallet:'w',asset:'token',week:1,division:'garage',points:500,display_name:'hacker',until_at:new Date().toISOString()};
@@ -33,7 +33,7 @@ check('hs_locks: unreachable by players',denied(await rest(B.token,'GET','hs_loc
 for(const t of TABLES){const r=await rest(null,'GET',`${t}?select=*&limit=1`);check(`${t}: public key alone reads nothing`,Array.isArray(r.body)?r.body.length===0:r.status>=400);}
 // 4) Privileged database functions cannot be called by players or the public
 const fns={hs_settle_order:{p_order:order.id,p_signature:'fake-sig',p_payer:'fake'},hs_put_save:{p_user:B.id,p_state:{},p_expected:0,p_imported:false},hs_claim_check:{p_order:order.id,p_gap_ms:0},
- hs_week_winners:{p_week:1,p_force:true},hs_settle_week:{p_week:1},hs_claim_payouts:{p_limit:5},hs_payout_lock:{p_secs:1}};
+ hs_week_winners:{p_week:1,p_force:true},hs_settle_week:{p_week:1},hs_claim_payouts:{p_limit:5},hs_payout_lock:{p_secs:1},hs_alert_gate:{p_kind:'x',p_minutes:1},hs_payout_stats:{}};
 for(const [f,args] of Object.entries(fns)){
   const asUser=await rest(B.token,'POST',`rpc/${f}`,args),asPublic=await rest(null,'POST',`rpc/${f}`,args);
   check(`rpc ${f}: refused for players and the public`,asUser.status>=400&&asPublic.status>=400,`user ${asUser.status} public ${asPublic.status}`);
